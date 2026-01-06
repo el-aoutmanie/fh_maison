@@ -61,8 +61,8 @@ sudo php artisan view:clear
 sudo php artisan cache:clear
 
 # Optimize for production
+# Note: route:cache is NOT used because Laravel Localization doesn't work with cached routes
 sudo php artisan config:cache
-sudo php artisan route:cache
 sudo php artisan view:cache
 
 echo -e "${YELLOW}Step 10/10: Restarting services...${NC}"
