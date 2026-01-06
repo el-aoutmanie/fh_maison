@@ -2,23 +2,19 @@
 
 ###############################################################################
 # FH Maison - Application Deployment Script
-# Deploys Laravel application to production
 ###############################################################################
 
 set -e
 
-# Colors for output
+# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
 # Configuration
-APP_NAME="fhmaison"
 APP_DIR="/var/www/fhmaison"
-DEPLOY_USER="fhmaison"
-REPO_URL="YOUR_GIT_REPOSITORY_URL"  # Update this
-BRANCH="main"
+DEPLOY_USER="www-data"
 PHP_VERSION="8.3"
 
 echo -e "${GREEN}========================================${NC}"
@@ -32,109 +28,95 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-echo -e "${YELLOW}[1/10] Creating application directory...${NC}"
-mkdir -p "$APP_DIR"
+echo -e "${YELLOW}[1/11] Creating application directory...${NC}"
+mkdir -p "${APP_DIR}"
 
-echo -e "${YELLOW}[2/10] Setting up deployment...${NC}"
-if [ -d "$APP_DIR/.git" ]; then
-    echo -e "${GREEN}Repository exists, pulling latest changes...${NC}"
-    cd "$APP_DIR"
-    sudo -u "$DEPLOY_USER" git pull origin "$BRANCH"
+echo -e "${YELLOW}[2/11] Copying application files...${NC}"
+if [ -d "/home/ubuntu/fh_maison" ]; then
+    cp -r /home/ubuntu/fh_maison/* "${APP_DIR}/"
+    cp /home/ubuntu/fh_maison/.env.example "${APP_DIR}/" 2>/dev/null || true
+    echo -e "${GREEN}Files copied from /home/ubuntu/fh_maison${NC}"
 else
-    echo -e "${GREEN}Cloning repository...${NC}"
-    # If using Git, uncomment the following:
-    # sudo -u "$DEPLOY_USER" git clone -b "$BRANCH" "$REPO_URL" "$APP_DIR"
+    echo -e "${RED}ERROR: Source files not found in /home/ubuntu/fh_maison${NC}"
+    exit 1
+fi
+
+echo -e "${YELLOW}[3/11] Setting initial permissions...${NC}"
+chown -R www-data:www-data "${APP_DIR}"
+chmod -R 755 "${APP_DIR}"
+
+echo -e "${YELLOW}[4/11] Creating .env file...${NC}"
+if [ ! -f "${APP_DIR}/.env" ]; then
+    cp "${APP_DIR}/.env.example" "${APP_DIR}/.env"
     
-    # For manual deployment, copy files from uploaded archive
-    echo -e "${YELLOW}Manual deployment mode - copy your files to $APP_DIR${NC}"
+    # Load database credentials if available
+    if [ -f "/root/.fhmaison_db_credentials" ]; then
+        source /root/.fhmaison_db_credentials
+        sed -i "s/^DB_CONNECTION=.*/DB_CONNECTION=mysql/" "${APP_DIR}/.env"
+        sed -i "s/^DB_HOST=.*/DB_HOST=127.0.0.1/" "${APP_DIR}/.env"
+        sed -i "s/^DB_PORT=.*/DB_PORT=3306/" "${APP_DIR}/.env"
+        sed -i "s/^DB_DATABASE=.*/DB_DATABASE=${DB_DATABASE}/" "${APP_DIR}/.env"
+        sed -i "s/^DB_USERNAME=.*/DB_USERNAME=${DB_USERNAME}/" "${APP_DIR}/.env"
+        sed -i "s/^DB_PASSWORD=.*/DB_PASSWORD=${DB_PASSWORD}/" "${APP_DIR}/.env"
+        sed -i "s/^APP_ENV=.*/APP_ENV=production/" "${APP_DIR}/.env"
+        sed -i "s/^APP_DEBUG=.*/APP_DEBUG=false/" "${APP_DIR}/.env"
+        sed -i "s|^APP_URL=.*|APP_URL=https://fhmaison.fr|" "${APP_DIR}/.env"
+        echo -e "${GREEN}Database credentials configured${NC}"
+    fi
+    
+    chown www-data:www-data "${APP_DIR}/.env"
+    chmod 640 "${APP_DIR}/.env"
+    echo -e "${GREEN}.env file created${NC}"
+else
+    echo -e "${GREEN}.env file already exists${NC}"
 fi
 
-cd "$APP_DIR"
+echo -e "${YELLOW}[5/11] Installing Composer dependencies...${NC}"
+cd "${APP_DIR}"
+# Run composer as www-data user
+sudo -u www-data composer install --no-dev --optimize-autoloader --no-interaction
 
-echo -e "${YELLOW}[3/10] Installing Composer dependencies...${NC}"
-sudo -u "$DEPLOY_USER" composer install --no-dev --optimize-autoloader --no-interaction
-
-echo -e "${YELLOW}[4/10] Setting up environment file...${NC}"
-if [ ! -f .env ]; then
-    cp .env.production .env
-    echo -e "${YELLOW}Please update .env file with your database credentials${NC}"
-    nano .env
-fi
-
-echo -e "${YELLOW}[5/10] Generating application key...${NC}"
+echo -e "${YELLOW}[6/11] Generating application key...${NC}"
 php artisan key:generate --force
 
-echo -e "${YELLOW}[6/10] Installing Node dependencies and building assets...${NC}"
-sudo -u "$DEPLOY_USER" npm ci
-sudo -u "$DEPLOY_USER" npm run build
+echo -e "${YELLOW}[7/11] Installing NPM dependencies...${NC}"
+sudo -u www-data npm ci --omit=dev
 
-echo -e "${YELLOW}[7/10] Running database migrations...${NC}"
+echo -e "${YELLOW}[8/11] Building assets...${NC}"
+sudo -u www-data npm run build
+
+echo -e "${YELLOW}[9/11] Running database migrations...${NC}"
 php artisan migrate --force
 
-echo -e "${YELLOW}[8/10] Optimizing Laravel...${NC}"
+echo -e "${YELLOW}[10/11] Optimizing application...${NC}"
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
-php artisan event:cache
+php artisan optimize
 
-echo -e "${YELLOW}[9/10] Creating storage link...${NC}"
-php artisan storage:link
+echo -e "${YELLOW}[11/11] Setting final permissions...${NC}"
+# Storage and cache directories need write permissions
+chmod -R 775 "${APP_DIR}/storage"
+chmod -R 775 "${APP_DIR}/bootstrap/cache"
 
-echo -e "${YELLOW}[10/10] Setting proper permissions...${NC}"
-chown -R "$DEPLOY_USER":www-data "$APP_DIR"
-chmod -R 755 "$APP_DIR"
-chmod -R 775 "$APP_DIR/storage"
-chmod -R 775 "$APP_DIR/bootstrap/cache"
+# Create storage link
+php artisan storage:link || true
 
-# Set proper permissions for specific directories
-find "$APP_DIR/storage" -type f -exec chmod 664 {} \;
-find "$APP_DIR/storage" -type d -exec chmod 775 {} \;
-find "$APP_DIR/bootstrap/cache" -type f -exec chmod 664 {} \;
-find "$APP_DIR/bootstrap/cache" -type d -exec chmod 775 {} \;
+# Set proper ownership
+chown -R www-data:www-data "${APP_DIR}"
 
-echo -e "${YELLOW}Setting up Nginx configuration...${NC}"
-if [ -f "$APP_DIR/deployment/nginx/fhmaison.conf" ]; then
-    cp "$APP_DIR/deployment/nginx/fhmaison.conf" /etc/nginx/sites-available/fhmaison
-    ln -sf /etc/nginx/sites-available/fhmaison /etc/nginx/sites-enabled/fhmaison
-    rm -f /etc/nginx/sites-enabled/default
-    nginx -t && systemctl reload nginx
-fi
-
-echo -e "${YELLOW}Setting up Laravel scheduler...${NC}"
-CRON_CMD="* * * * * cd $APP_DIR && php artisan schedule:run >> /dev/null 2>&1"
-(crontab -u "$DEPLOY_USER" -l 2>/dev/null | grep -v "artisan schedule:run"; echo "$CRON_CMD") | crontab -u "$DEPLOY_USER" -
-
-echo -e "${YELLOW}Setting up Laravel queue worker...${NC}"
-cat > /etc/supervisor/conf.d/fhmaison-worker.conf <<EOF
-[program:fhmaison-worker]
-process_name=%(program_name)s_%(process_num)02d
-command=php $APP_DIR/artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
-autostart=true
-autorestart=true
-stopasgroup=true
-killasgroup=true
-user=$DEPLOY_USER
-numprocs=2
-redirect_stderr=true
-stdout_logfile=$APP_DIR/storage/logs/worker.log
-stopwaitsecs=3600
-EOF
-
-supervisorctl reread
-supervisorctl update
-supervisorctl start fhmaison-worker:*
+# Restart services
+systemctl restart php${PHP_VERSION}-fpm
+systemctl restart nginx
 
 echo -e "${GREEN}========================================${NC}"
-echo -e "${GREEN}Application deployment completed!${NC}"
+echo -e "${GREEN}Deployment Complete!${NC}"
 echo -e "${GREEN}========================================${NC}"
+echo ""
+echo -e "${YELLOW}Application URL:${NC} http://fhmaison.fr"
 echo ""
 echo -e "${YELLOW}Next steps:${NC}"
-echo "1. Update .env file with correct credentials"
-echo "2. Run database seeders if needed: php artisan db:seed"
-echo "3. Set up SSL with Certbot"
-echo "4. Test your application"
+echo "1. Test the application: curl http://fhmaison.fr"
+echo "2. Set up SSL: sudo bash ${APP_DIR}/deployment/scripts/04-setup-ssl.sh"
+echo "3. Review logs: tail -f ${APP_DIR}/storage/logs/laravel.log"
 echo ""
-echo -e "${YELLOW}Useful commands:${NC}"
-echo "View logs: tail -f $APP_DIR/storage/logs/laravel.log"
-echo "Restart workers: supervisorctl restart fhmaison-worker:*"
-echo "Clear cache: php artisan cache:clear"
