@@ -1,0 +1,126 @@
+version: '3.8'
+
+services:
+  # Application Service (PHP-FPM)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fhmaison_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+    networks:
+      - fhmaison_network
+    depends_on:
+      - db
+      - redis
+
+  # PHP CLI Service (For running artisan commands)
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fhmaison_php_cli
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - fhmaison_network
+    entrypoint: ['php']
+    # Run commands like: docker-compose run --rm php artisan migrate
+
+  # Composer Service
+  composer:
+    image: composer:latest
+    container_name: fhmaison_composer
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - fhmaison_network
+    # Run commands like: docker-compose run --rm composer install
+
+  # Node/NPM Service (For Vite build)
+  node:
+    image: node:20-alpine
+    container_name: fhmaison_node
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "5173:5173"
+    networks:
+      - fhmaison_network
+    # Run commands like: docker-compose run --rm node npm install
+    # For dev server: docker-compose run --service-ports node npm run dev
+
+  # Nginx Service
+  nginx:
+    image: nginx:alpine
+    container_name: fhmaison_nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - fhmaison_network
+    depends_on:
+      - app
+
+  # MySQL Service
+  db:
+    image: mysql:8.0
+    container_name: fhmaison_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-fhmaison_db}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-fhmaison_user}
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - fhmaison_network
+
+  # Redis Service
+  redis:
+    image: redis:alpine
+    container_name: fhmaison_redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    networks:
+      - fhmaison_network
+
+  # PhpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: fhmaison_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+    ports:
+      - "8081:80"
+    networks:
+      - fhmaison_network
+    depends_on:
+      - db
+
+# Docker Networks
+networks:
+  fhmaison_network:
+    driver: bridge
+
+# Volumes
+volumes:
+  db_data:
+    driver: local
