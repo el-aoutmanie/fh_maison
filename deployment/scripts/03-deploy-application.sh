@@ -81,32 +81,35 @@ sudo -u www-data composer install --no-dev --optimize-autoloader --no-interactio
 echo -e "${YELLOW}[6/11] Generating application key...${NC}"
 php artisan key:generate --force
 
-echo -e "${YELLOW}[7/11] Installing NPM dependencies...${NC}"
+echo -e "${YELLOW}[7/11] Installing NPM dependencies (including devDependencies for build)...${NC}"
 # Create npm cache directory for www-data
 mkdir -p /var/www/.npm
 chown -R www-data:www-data /var/www/.npm
 
-# Use npm install instead of npm ci (generates package-lock.json)
+# Install ALL dependencies (including devDependencies) to build assets
 if [ ! -f "${APP_DIR}/package-lock.json" ]; then
     echo -e "${YELLOW}Generating package-lock.json...${NC}"
-    sudo -u www-data npm install --omit=dev
+    sudo -u www-data npm install
 else
-    sudo -u www-data npm ci --omit=dev
+    sudo -u www-data npm ci
 fi
 
 echo -e "${YELLOW}[8/11] Building assets...${NC}"
 sudo -u www-data npm run build
 
-echo -e "${YELLOW}[9/11] Running database migrations...${NC}"
+echo -e "${YELLOW}[9/11] Cleaning up dev dependencies...${NC}"
+# Remove devDependencies after build
+sudo -u www-data npm prune --omit=dev
+
+echo -e "${YELLOW}[10/11] Running database migrations...${NC}"
 php artisan migrate --force
 
-echo -e "${YELLOW}[10/11] Optimizing application...${NC}"
+echo -e "${YELLOW}[11/11] Optimizing application...${NC}"
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan optimize
 
-echo -e "${YELLOW}[11/11] Setting final permissions...${NC}"
 # Storage and cache directories need write permissions
 chmod -R 775 "${APP_DIR}/storage"
 chmod -R 775 "${APP_DIR}/bootstrap/cache"
