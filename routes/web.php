@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Admin\ImageController;
 
+// Root redirect to default locale (MUST BE BEFORE THE LOCALIZED GROUP)
+Route::get('/', function () {
+    return redirect(LaravelLocalization::getLocalizedURL(app()->getLocale()));
+});
+
 // Localized routes
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
@@ -56,7 +61,7 @@ Route::group([
     Route::post('/services/{service}/book', [ServiceController::class, 'book'])->name('services.book');
     
     // Contact
-    Route::get('/contact', function () { return view('frontend.contact.index'); })->name('contact');
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact');
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
     
     // About
@@ -119,9 +124,4 @@ Route::group([
     
     // Auth Routes
     require __DIR__.'/auth.php';
-});
-
-// Fallback for non-localized URLs
-Route::get('/', function () {
-    return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
 });

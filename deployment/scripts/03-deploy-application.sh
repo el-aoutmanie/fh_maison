@@ -28,25 +28,99 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-echo -e "${YELLOW}[1/11] Creating application directory...${NC}"
+echo -e "${YELLOW}[1/12] Creating application directory...${NC}"
 mkdir -p "${APP_DIR}"
 
-echo -e "${YELLOW}[2/11] Checking application files...${NC}"
+echo -e "${YELLOW}[2/12] Checking application files...${NC}"
 if [ ! -f "${APP_DIR}/composer.json" ]; then
     echo -e "${RED}ERROR: Application not found in ${APP_DIR}${NC}"
     echo -e "${YELLOW}Please clone your repository first:${NC}"
     echo "  cd /var/www"
-    echo "  sudo git clone YOUR_REPO_URL laravel"
-    echo "  sudo chown -R www-data:www-data laravel"
+    echo "  sudo git clone YOUR_REPO_URL fhmaison"
+    echo "  sudo chown -R www-data:www-data fhmaison"
     exit 1
 fi
 echo -e "${GREEN}Application files found in ${APP_DIR}${NC}"
 
-echo -e "${YELLOW}[3/11] Setting initial permissions...${NC}"
+echo -e "${YELLOW}[3/12] Setting initial permissions...${NC}"
 chown -R www-data:www-data "${APP_DIR}"
 chmod -R 755 "${APP_DIR}"
 
-echo -e "${YELLOW}[4/11] Creating .env file...${NC}"
+echo -e "${YELLOW}[4/12] Configuring Nginx...${NC}"
+# Use the config from deployment folder or create default
+if [ -f "${APP_DIR}/deployment/nginx/fhmaison.conf" ]; then
+    cp "${APP_DIR}/deployment/nginx/fhmaison.conf" /etc/nginx/sites-available/fhmaison.fr
+    echo -e "${GREEN}Nginx configuration copied from deployment folder${NC}"
+else
+    cat > /etc/nginx/sites-available/fhmaison.fr <<'NGINXEOF'
+server {
+    listen 80;
+    listen [::]:80;
+    server_name fhmaison.fr www.fhmaison.fr;
+    
+    root /var/www/fhmaison/public;
+    index index.php index.html;
+    
+    charset utf-8;
+    
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+    
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+    
+    location /storage {
+        alias /var/www/fhmaison/storage/app/public;
+    }
+    
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+    
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+    
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt { access_log off; log_not_found off; }
+    
+    error_page 404 /index.php;
+    
+    access_log /var/log/nginx/fhmaison-access.log;
+    error_log /var/log/nginx/fhmaison-error.log;
+}
+NGINXEOF
+    echo -e "${GREEN}Default nginx configuration created${NC}"
+fi
+
+# Remove default site and enable fhmaison
+rm -f /etc/nginx/sites-enabled/default
+ln -sf /etc/nginx/sites-available/fhmaison.fr /etc/nginx/sites-enabled/
+
+# Test nginx configuration
+nginx -t
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Nginx configuration test failed!${NC}"
+    exit 1
+fi
+systemctl reload nginx
+echo -e "${GREEN}Nginx configured and reloaded${NC}"
+
+echo -e "${YELLOW}[5/12] Creating .env file...${NC}"
 if [ ! -f "${APP_DIR}/.env" ]; then
     cp "${APP_DIR}/.env.example" "${APP_DIR}/.env"
     
@@ -72,15 +146,15 @@ else
     echo -e "${GREEN}.env file already exists${NC}"
 fi
 
-echo -e "${YELLOW}[5/11] Installing Composer dependencies...${NC}"
+echo -e "${YELLOW}[6/12] Installing Composer dependencies...${NC}"
 cd "${APP_DIR}"
 # Run composer as www-data user
 sudo -u www-data composer install --no-dev --optimize-autoloader --no-interaction
 
-echo -e "${YELLOW}[6/11] Generating application key...${NC}"
+echo -e "${YELLOW}[7/12] Generating application key...${NC}"
 php artisan key:generate --force
 
-echo -e "${YELLOW}[7/11] Installing NPM dependencies (including devDependencies for build)...${NC}"
+echo -e "${YELLOW}[8/12] Installing NPM dependencies (including devDependencies for build)...${NC}"
 # Create npm cache directory for www-data
 mkdir -p /var/www/.npm
 chown -R www-data:www-data /var/www/.npm
@@ -93,20 +167,19 @@ else
     sudo -u www-data npm ci
 fi
 
-echo -e "${YELLOW}[8/11] Building assets...${NC}"
+echo -e "${YELLOW}[9/12] Building assets...${NC}"
 sudo -u www-data npm run build
 
-echo -e "${YELLOW}[9/11] Cleaning up dev dependencies...${NC}"
+echo -e "${YELLOW}[10/12] Cleaning up dev dependencies...${NC}"
 # Remove devDependencies after build
 sudo -u www-data npm prune --omit=dev
 
-echo -e "${YELLOW}[10/11] Running database migrations...${NC}"
+echo -e "${YELLOW}[11/12] Running database migrations...${NC}"
 php artisan migrate --force
 
-echo -e "${YELLOW}[11/11] Optimizing application...${NC}"
+echo -e "${YELLOW}[12/12] Optimizing application...${NC}"
 php artisan config:cache
 php artisan route:cache
-php artisan view:cache
 php artisan optimize
 
 # Storage and cache directories need write permissions
