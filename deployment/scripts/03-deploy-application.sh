@@ -31,17 +31,16 @@ fi
 echo -e "${YELLOW}[1/11] Creating application directory...${NC}"
 mkdir -p "${APP_DIR}"
 
-echo -e "${YELLOW}[2/11] Copying application files...${NC}"
-if [ -d "/home/ubuntu/fh_maison" ]; then
-    cp -r /home/ubuntu/fh_maison/* "${APP_DIR}/"
-    cp /home/ubuntu/fh_maison/.env.example "${APP_DIR}/" 2>/dev/null || true
-    # Copy hidden files
-    cp /home/ubuntu/fh_maison/.gitignore "${APP_DIR}/" 2>/dev/null || true
-    echo -e "${GREEN}Files copied from /home/ubuntu/fh_maison${NC}"
-else
-    echo -e "${RED}ERROR: Source files not found in /home/ubuntu/fh_maison${NC}"
+echo -e "${YELLOW}[2/11] Checking application files...${NC}"
+if [ ! -f "${APP_DIR}/composer.json" ]; then
+    echo -e "${RED}ERROR: Application not found in ${APP_DIR}${NC}"
+    echo -e "${YELLOW}Please clone your repository first:${NC}"
+    echo "  cd /var/www"
+    echo "  sudo git clone YOUR_REPO_URL laravel"
+    echo "  sudo chown -R www-data:www-data laravel"
     exit 1
 fi
+echo -e "${GREEN}Application files found in ${APP_DIR}${NC}"
 
 echo -e "${YELLOW}[3/11] Setting initial permissions...${NC}"
 chown -R www-data:www-data "${APP_DIR}"

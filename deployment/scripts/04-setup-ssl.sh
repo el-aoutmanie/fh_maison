@@ -16,7 +16,7 @@ NC='\033[0m'
 # Configuration
 DOMAIN="fhmaison.fr"
 EMAIL="admin@fhmaison.fr"  # Update this with your email
-APP_DIR="/var/www/fhmaison"
+APP_DIR="/var/www/laravel"
 
 echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}FH Maison - SSL Certificate Setup${NC}"
