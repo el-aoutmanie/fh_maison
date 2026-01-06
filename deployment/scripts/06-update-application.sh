@@ -15,7 +15,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # Configuration
-APP_DIR="/var/www/laravel"
+APP_DIR="/var/www/fhmaison"
 DEPLOY_USER="www-data"
 BACKUP_DIR="/var/backups/laravel"
 PHP_VERSION="8.3"
