@@ -35,6 +35,8 @@ echo -e "${YELLOW}[2/11] Copying application files...${NC}"
 if [ -d "/home/ubuntu/fh_maison" ]; then
     cp -r /home/ubuntu/fh_maison/* "${APP_DIR}/"
     cp /home/ubuntu/fh_maison/.env.example "${APP_DIR}/" 2>/dev/null || true
+    # Copy hidden files
+    cp /home/ubuntu/fh_maison/.gitignore "${APP_DIR}/" 2>/dev/null || true
     echo -e "${GREEN}Files copied from /home/ubuntu/fh_maison${NC}"
 else
     echo -e "${RED}ERROR: Source files not found in /home/ubuntu/fh_maison${NC}"
@@ -80,7 +82,17 @@ echo -e "${YELLOW}[6/11] Generating application key...${NC}"
 php artisan key:generate --force
 
 echo -e "${YELLOW}[7/11] Installing NPM dependencies...${NC}"
-sudo -u www-data npm ci --omit=dev
+# Create npm cache directory for www-data
+mkdir -p /var/www/.npm
+chown -R www-data:www-data /var/www/.npm
+
+# Use npm install instead of npm ci (generates package-lock.json)
+if [ ! -f "${APP_DIR}/package-lock.json" ]; then
+    echo -e "${YELLOW}Generating package-lock.json...${NC}"
+    sudo -u www-data npm install --omit=dev
+else
+    sudo -u www-data npm ci --omit=dev
+fi
 
 echo -e "${YELLOW}[8/11] Building assets...${NC}"
 sudo -u www-data npm run build
@@ -104,6 +116,9 @@ php artisan storage:link || true
 
 # Set proper ownership
 chown -R www-data:www-data "${APP_DIR}"
+
+# Clean up npm cache
+rm -rf /var/www/.npm
 
 # Restart services
 systemctl restart php${PHP_VERSION}-fpm
