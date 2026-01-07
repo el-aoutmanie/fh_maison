@@ -1,24 +1,64 @@
-<nav class="bg-white border-bottom border-gray-200 shadow-sm sticky-top" style="z-index: 1030;">
+
+<style>
+    :root {
+        --nav-bg: #f7f3ed;
+        --nav-text: #5c4b3e;
+        --nav-hover-line: #5c4b3e;
+    }
+    
+    .custom-nav {
+        background-color: var(--nav-bg);
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Clean sans-serif */
+    }
+
+    .custom-nav-link {
+        color: var(--nav-text) !important;
+        font-weight: 500;
+        padding: 0.5rem 0; /* Reduced padding to fit line */
+        margin: 0 1rem;
+        position: relative;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        text-transform: capitalize;
+        font-size: 0.95rem;
+    }
+
+    .custom-nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 1px; /* The simple line */
+        bottom: 0;
+        left: 0;
+        background-color: var(--nav-hover-line);
+        transition: width 0.3s ease;
+    }
+
+    .custom-nav-link:hover::after,
+    .custom-nav-link.active::after {
+        width: 100%;
+        left: 0;
+    }
+    
+    /* Remove default active/hover backgrounds if any */
+    .custom-nav-link:hover,
+    .custom-nav-link.active {
+        background-color: transparent !important;
+        color: var(--nav-text) !important;
+    }
+
+    .logo-text {
+        font-family: 'Georgia', 'Times New Roman', serif;
+        color: var(--nav-text);
+        letter-spacing: 1px;
+    }
+</style>
+
+<nav class="custom-nav border-bottom border-gray-200 shadow-sm sticky-top" style="z-index: 1030;">
     @php
         $isRtl = LaravelLocalization::getCurrentLocaleDirection() === 'rtl';
     @endphp
     
-    <!-- Top Announcement Bar -->
-    <div class="bg-gradient-to-r from-amber-600 to-amber-700 text-white py-2" style="background: linear-gradient(135deg, #d97706, #b45309);" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-12 text-center">
-                    <div class="d-inline-flex align-items-center gap-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                        <i class="fas fa-gift" style="font-size: 0.9rem;"></i>
-                        <span class="fw-medium">{{ __('Free Shipping Worldwide') }}</span>
-                        <span class="mx-2 opacity-75">•</span>
-                        <span class="d-none d-md-inline">{{ __('Orders Over $50') }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Navigation -->
     <div class="container py-3" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
         <div class="d-flex align-items-center justify-content-between {{ $isRtl ? 'flex-row-reverse' : '' }}">
@@ -26,112 +66,63 @@
             <!-- Logo & Mobile Menu -->
             <div class="d-flex align-items-center gap-4 {{ $isRtl ? 'flex-row-reverse' : '' }}">
                 <!-- Mobile Menu Button -->
-                <button class="btn btn-outline-light d-lg-none p-2 rounded-3" 
+                <button class="btn btn-link d-lg-none p-2" 
                         onclick="toggleMobileMenu()"
-                        style="border: none; color: #4b5563;">
+                        style="color: var(--nav-text);">
                     <i class="fas fa-bars" style="font-size: 1.2rem;"></i>
                 </button>
 
                 <!-- Logo -->
-                <a href="{{ route('home') }}" class="text-decoration-none d-flex align-items-center gap-3 logo-hover">
-                    <div class="position-relative">
-                        <div class="rounded-3 d-flex align-items-center justify-content-center" 
-                             style="width: 48px; height: 48px; background: linear-gradient(135deg, #d97706, #92400e); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);">
-                            <span class="text-white fw-bold" style="font-size: 1.1rem;">AS</span>
-                        </div>
-                        <div class="position-absolute top-0 start-0 w-100 h-100 rounded-3" 
-                             style="background: rgba(245, 158, 11, 0.2); filter: blur(8px); opacity: 0; transition: opacity 0.3s ease;"></div>
-                    </div>
-                    <div>
-                        <div class="fw-bold text-gray-900" style="font-size: 1.25rem; letter-spacing: -0.5px;">
-                            Artisan<span class="text-amber-600">Store</span>
-                        </div>
-                        <div class="text-gray-500" style="font-size: 0.75rem; font-weight: 500; letter-spacing: 0.5px;">
-                            {{ __('Premium Handcrafted Goods') }}
-                        </div>
-                    </div>
+                <a href="{{ route('home') }}" class="text-decoration-none d-flex align-items-center gap-2">
+                   <div class="p-1 border border-dark rounded-1 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; border-color: #5c4b3e !important;">
+                        <span class="fw-bold" style="color: #5c4b3e; font-family: serif;">FH</span>
+                   </div>
+                   <span class="fw-bold logo-text text-uppercase" style="font-size: 1.1rem;">FH MAISON</span>
                 </a>
             </div>
 
             <!-- Desktop Navigation -->
-            <div class="d-none d-lg-flex align-items-center gap-2 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                <a href="{{ route('home') }}" 
-                   class="nav-link px-4 py-2.5 rounded-3 d-flex align-items-center gap-2 {{ $isRtl ? 'flex-row-reverse' : '' }} {{ request()->routeIs('home') ? 'active-nav' : 'nav-link-hover' }}"
-                   style="font-weight: 500;">
+            <div class="d-none d-lg-flex align-items-center {{ $isRtl ? 'flex-row-reverse' : '' }}">
+                <a href="{{ route('home') }}" class="custom-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
                     {{ __('Home') }}
                 </a>
                 
-                <!-- Shop Dropdown -->
-                <div class="dropdown position-relative">
-                    <button class="nav-link px-4 py-2.5 rounded-3 d-flex align-items-center gap-2 {{ $isRtl ? 'flex-row-reverse' : '' }} dropdown-toggle nav-link-hover {{ request()->routeIs('shop.*') || request()->routeIs('products.*') || request()->routeIs('categories.*') ? 'active-nav' : '' }}"
-                            type="button"
-                            id="shopDropdown"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                            style="font-weight: 500; border: none; background: none;">
-                        {{ __('Shop') }}
-                        <i class="fas fa-chevron-down {{ $isRtl ? 'me-1' : 'ms-1' }}" style="font-size: 0.7rem;"></i>
-                    </button>
-                    
-                    <!-- Shop Dropdown Menu -->
-                    <div class="dropdown-menu shadow-lg border-0 rounded-3 p-3" 
-                         aria-labelledby="shopDropdown"
-                         style="width: 320px; min-width: 320px; margin-top: 0.5rem;"
-                         dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-                        
-                        <!-- Header -->
-                        <div class="mb-3 pb-3 border-bottom">
-                            <h6 class="fw-bold text-gray-900 mb-1">{{ __('Browse Collections') }}</h6>
-                            <p class="text-gray-500 mb-0 small">{{ __('Handpicked artisan products') }}</p>
-                        </div>
-                        
-                        <!-- Categories List -->
-                        <div class="mb-3">
-                            @foreach(\App\Models\Category::withCount('products')->get() ?? [] as $category)
-                            <a href="{{ route('categories.show', $category->slug) }}" 
-                               class="dropdown-item d-flex align-items-center py-2.5 px-3 rounded-2 mb-1 category-item {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                <div class="d-flex align-items-center justify-content-center rounded-2 {{ $isRtl ? 'ms-3' : 'me-3' }}" 
-                                     style="width: 36px; height: 36px; background: linear-gradient(135deg, #fef3c7, #fde68a);">
-                                    <i class="fas fa-box text-amber-600" style="font-size: 0.9rem;"></i>
-                                </div>
-                                <div class="flex-grow-1">
-                        <div class="fw-medium">{{ $category->name[app()->getLocale()] ?? $category->name['en'] ??   $category->name }}</div>
-                                    <div class="text-gray-500 small">{{ $category->products_count ?? 0 }} items</div>
-                                </div>
-                            </a>
-                            @endforeach
-                        </div>
-                        
-                        <!-- View All Link -->
-                        <div class="pt-2 border-top">
-                            <a href="{{ route('products.index') }}" 
-                               class="btn btn-amber-50 text-amber-700 fw-medium w-100 d-flex align-items-center justify-content-center py-2.5 rounded-2 hover-amber {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                <i class="fas fa-boxes {{ $isRtl ? 'ms-2' : 'me-2' }}"></i>
-                                {{ __('View All Products') }}
-                                <i class="fas fa-arrow-right {{ $isRtl ? 'me-2 rotate-180' : 'ms-2' }} small"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <a href="{{ route('services.index') }}" 
-                   class="nav-link px-4 py-2.5 rounded-3 d-flex align-items-center gap-2 {{ $isRtl ? 'flex-row-reverse' : '' }} {{ request()->routeIs('services.*') ? 'active-nav' : 'nav-link-hover' }}"
-                   style="font-weight: 500;">
-                    {{ __('Services') }}
+                <a href="{{ route('products.index') }}" class="custom-nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}">
+                    {{ __('Shop') }}
+                </a>
+
+                <!-- Categories as Links as per image -->
+                <!-- Assuming standard categories exist or creating placeholders -->
+                <a href="{{ route('categories.show', 'bougies') }}" class="custom-nav-link">
+                    {{ __('Candles') }}
+                </a>
+
+                <a href="{{ route('categories.show', 'ceramique') }}" class="custom-nav-link">
+                    {{ __('Ceramics') }}
+                </a>
+
+                 <a href="{{ route('categories.show', 'textile') }}" class="custom-nav-link">
+                    {{ __('Textile & Customization') }}
+                </a>
+
+                 <a href="{{ route('services.index') }}" class="custom-nav-link {{ request()->routeIs('services.*') ? 'active' : '' }}">
+                    {{ __('Alterations & Sewing') }}
                 </a>
                 
-                <a href="{{ route('about') }}" 
-                   class="nav-link px-4 py-2.5 rounded-3 d-flex align-items-center gap-2 {{ $isRtl ? 'flex-row-reverse' : '' }} {{ request()->routeIs('about') ? 'active-nav' : 'nav-link-hover' }}"
-                   style="font-weight: 500;">
+                 <a href="{{ route('categories.show', 'art-maison') }}" class="custom-nav-link">
+                    {{ __('Home Art') }}
+                </a>
+                
+                 <a href="{{ route('about') }}" class="custom-nav-link {{ request()->routeIs('about') ? 'active' : '' }}">
                     {{ __('About') }}
                 </a>
-                
-                <a href="{{ route('contact') }}" 
-                   class="nav-link px-4 py-2.5 rounded-3 d-flex align-items-center gap-2 {{ $isRtl ? 'flex-row-reverse' : '' }} {{ request()->routeIs('contact') ? 'active-nav' : 'nav-link-hover' }}"
-                   style="font-weight: 500;">
+
+                 <a href="{{ route('contact') }}" class="custom-nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">
                     {{ __('Contact') }}
                 </a>
             </div>
+
+
 
             <!-- Action Buttons -->
             <div class="d-flex align-items-center gap-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">

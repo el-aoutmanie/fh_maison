@@ -16,12 +16,14 @@
 
 @push('styles')
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
     :root {
         --primary-color: #5c4b3e;
         --secondary-color: #8c7b6e;
         --bg-color: #fcfbf9;
         --text-color: #2d2d2d;
-        --font-serif: 'Georgia', 'Times New Roman', serif;
+        --font-serif: 'Playfair Display', 'Georgia', serif;
         --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
@@ -56,40 +58,67 @@
 
     /* Main Hero Section */
     .main-hero {
-        padding: 4rem 0;
-        background-color: var(--bg-color);
+        position: relative;
+        width: 100%; /* Full viewport width */
+        min-height: 80vh; /* Taller hero */
+        background-color: #eaddcf; /* Fallback beige */
+        /* Placeholder for background image - user can replace this URL */
+        background-image: url('https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop'); 
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        padding: 0;
+    }
+    
+    .hero-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(247, 243, 237, 0.3); /* Light transparent overlay text visibility */
+    }
+
+    .hero-container {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        padding: 0 5%;
     }
 
     .hero-content {
-        padding-right: 2rem;
+        max-width: 650px;
     }
 
     .hero-title {
-        font-size: 3.5rem;
-        line-height: 1.2;
+        font-family: var(--font-serif);
+        font-size: 4.5rem; /* Larger title */
+        line-height: 1.1;
         margin-bottom: 1.5rem;
         color: #4a3b32;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .hero-subtitle {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        color: #4a3b32;
+        margin-bottom: 1.5rem;
+        font-style: italic;
     }
 
     .hero-text {
         font-size: 1.1rem;
-        color: #666;
-        margin-bottom: 2rem;
+        color: #4a3b32;
+        margin-bottom: 2.5rem;
         line-height: 1.6;
-    }
-
-    .hero-image {
-        width: 100%;
-        height: 500px;
-        object-fit: cover;
-        border-radius: 4px;
+        font-weight: 500;
     }
 
     /* Buttons */
     .btn-custom-primary {
         background-color: #5c4b3e;
         color: white;
-        padding: 0.8rem 2rem;
+        padding: 1rem 2.5rem;
         border-radius: 2px;
         border: 1px solid #5c4b3e;
         transition: all 0.3s;
@@ -97,6 +126,29 @@
         font-size: 0.9rem;
         text-transform: uppercase;
         letter-spacing: 1px;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-custom-outline {
+        background-color: rgba(255,255,255,0.7);
+        color: #5c4b3e;
+        padding: 1rem 2.5rem;
+        border-radius: 2px;
+        border: 1px solid #5c4b3e;
+        transition: all 0.3s;
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-decoration: none;
+        display: inline-block;
+        margin-left: 1rem;
+    }
+    
+    [dir="rtl"] .btn-custom-outline {
+        margin-left: 0;
+        margin-right: 1rem;
     }
 
     .btn-custom-primary:hover {
@@ -283,23 +335,17 @@
 @section('content')
 <!-- Main Hero Section -->
 <section class="main-hero">
-    <div class="container">
-        <div class="row align-items-center" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-            <div class="col-lg-6 hero-content">
-                <h1 class="hero-title">FH MAISON DE L'ARTISANAT</h1>
-                <h2 class="h4 mb-4" style="font-family: var(--font-serif); color: #666;">{{ __('Des créations faites main, pour sublimer le quotidien.') }}</h2>
-                <p class="hero-text">
-                    {{ __('Un univers chic et commun, objets précieux, traiteur et créations sur mesure.') }}
-                </p>
-                <div class="d-flex gap-3">
-                    <a href="{{ route('products.index') }}" class="btn-custom-primary">{{ __('Découvrir la boutique') }}</a>
-                    <a href="{{ route('about') }}" class="btn-custom-outline">{{ __('En savoir plus sur l\'atelier') }}</a>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div style="background-color: #e8d5c4; height: 500px; width: 100%; border-radius: 4px;">
-                    <img src="{{ asset('assets/heresection.jpg') }}" alt="" class="h-100 w-100 object-fit-cover">
-                </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-container" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
+        <div class="hero-content">
+            <h1 class="hero-title">FH MAISON DE<br>L'ARTISANAT</h1>
+            <h2 class="hero-subtitle">{{ __('Des créations faites main, pour sublimer le quotidien.') }}</h2>
+            <p class="hero-text">
+                {{ __('Un univers chic et commun, objets précieux, traiteur et créations sur mesure.') }}
+            </p>
+            <div class="d-flex align-items-center flex-wrap">
+                <a href="{{ route('products.index') }}" class="btn-custom-primary">{{ __('Découvrir la boutique') }}</a>
+                <a href="{{ route('about') }}" class="btn-custom-outline">{{ __('En savoir plus sur l\'atelier') }}</a>
             </div>
         </div>
     </div>
