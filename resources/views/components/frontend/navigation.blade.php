@@ -52,6 +52,67 @@
         color: var(--nav-text);
         letter-spacing: 1px;
     }
+
+    /* Dropdown Hover */
+    .dropdown-hover {
+        position: relative;
+    }
+    
+    .dropdown-hover:hover .dropdown-menu-custom {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+    }
+
+    .dropdown-menu-custom {
+        display: none;
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        min-width: 220px;
+        background-color: #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        padding: 0.5rem 0;
+        border-radius: 4px;
+        z-index: 1050;
+        transition: all 0.3s ease;
+        transform: translateY(10px);
+        margin-top: 0px;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    [dir="rtl"] .dropdown-menu-custom {
+        left: auto;
+        right: 0;
+    }
+
+    .dropdown-item-custom {
+        display: block;
+        padding: 0.6rem 1.2rem;
+        color: var(--nav-text);
+        text-decoration: none;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+        border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .dropdown-item-custom:last-child {
+        border-bottom: none;
+    }
+
+    .dropdown-item-custom:hover {
+        background-color: #f7f3ed;
+        color: #4a3b32;
+        padding-left: 1.5rem;
+    }
+    
+    [dir="rtl"] .dropdown-item-custom:hover {
+        padding-left: 1.2rem;
+        padding-right: 1.5rem;
+    }
 </style>
 
 <nav class="custom-nav border-bottom border-gray-200 shadow-sm sticky-top" style="z-index: 1030;">
@@ -91,12 +152,20 @@
                     {{ __('Shop') }}
                 </a>
 
-                <!-- Categories as Links (Dynamic) -->
-                @foreach(\App\Models\Category::where('is_active', true)->where('show_in_menu', true)->get() as $category)
-                <a href="{{ route('categories.show', $category->slug) }}" class="custom-nav-link {{ request()->url() == route('categories.show', $category->slug) ? 'active' : '' }}">
-                    {{ $category->name[app()->getLocale()] ?? $category->name['en'] ?? $category->name }}
-                </a>
-                @endforeach
+                <!-- Categories Dropdown -->
+                <div class="dropdown-hover">
+                    <a href="{{ route('products.index') }}" class="custom-nav-link d-flex align-items-center gap-1 {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                        {{ __('Categories') }}
+                        <i class="fas fa-chevron-down opacity-50" style="font-size: 0.7em;"></i>
+                    </a>
+                    <div class="dropdown-menu-custom">
+                        @foreach(\App\Models\Category::where('is_active', true)->where('show_in_menu', true)->get() as $category)
+                        <a href="{{ route('categories.show', $category->slug) }}" class="dropdown-item-custom">
+                            {{ $category->name[app()->getLocale()] ?? $category->name['en'] ?? $category->name }}
+                        </a>
+                        @endforeach
+                    </div>
+                </div>
                 
                  <a href="{{ route('about') }}" class="custom-nav-link {{ request()->routeIs('about') ? 'active' : '' }}">
                     {{ __('About') }}
@@ -322,9 +391,9 @@
                         {{ __('Categories') }}
                     </div>
                     <div class="mobile-categories-list">
-                        @foreach($categories ?? [] as $category)
+                        @foreach(\App\Models\Category::where('is_active', true)->where('show_in_menu', true)->get() as $category)
                             <a href="{{ route('categories.show', $category->slug) }}" class="mobile-category-item">
-                                {{ $category->name }}
+                                {{ $category->name[app()->getLocale()] ?? $category->name['en'] ?? $category->name }}
                             </a>
                         @endforeach
                     </div>

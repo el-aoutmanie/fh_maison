@@ -436,12 +436,12 @@
                             <div class="product-price">
                                 @if($product->price)
                                     @if($product->sale_price && $product->sale_price < $product->price)
-                                        {{ number_format($product->sale_price, 2) }} €
+                                        {{ number_format($product->sale_price, 2) }} {{ __('MAD') }}
                                     @else
-                                        {{ number_format($product->price, 2) }} €
+                                        {{ number_format($product->price, 2) }} {{ __('MAD') }}
                                     @endif
                                 @elseif($product->variants->first())
-                                    {{ number_format($product->variants->first()->price, 2) }} €
+                                    {{ number_format($product->variants->first()->price, 2) }} {{ __('MAD') }}
                                 @endif
                             </div>
                             <a href="{{ $productSlug ? LaravelLocalization::localizeUrl(route('products.show', $productSlug)) : '#' }}" class="btn-product">
