@@ -11,12 +11,13 @@ class Category extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable = ['name', 'slug', 'description', 'image_url', 'is_active'];
+    protected $fillable = ['name', 'slug', 'description', 'image_url', 'is_active', 'show_in_menu'];
 
     protected $casts = [
         'name' => 'array',
         'description' => 'array',
         'is_active' => 'boolean',
+        'show_in_menu' => 'boolean',
     ];
 
     public function products()

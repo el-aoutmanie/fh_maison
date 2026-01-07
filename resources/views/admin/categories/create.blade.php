@@ -70,6 +70,13 @@
                     @error('is_active')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+
+                    <div class="mt-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="show_in_menu" name="show_in_menu" value="1" {{ old('show_in_menu') ? 'checked' : '' }}>
+                            <label class="form-check-label fw-semibold" for="show_in_menu">{{ __('Show in Menu') }}</label>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Slug -->

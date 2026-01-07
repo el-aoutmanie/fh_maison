@@ -40,6 +40,7 @@ class CategoryController extends Controller
             'slug' => 'nullable|string|unique:categories,slug',
             'image' => 'nullable|image|max:2048',
             'is_active' => 'boolean',
+            'show_in_menu' => 'boolean',
         ]);
 
         $data = [
@@ -47,6 +48,7 @@ class CategoryController extends Controller
             'description' => $request->description,
             'slug' => $request->slug ?? Str::slug($request->name['en']),
             'is_active' => $request->is_active ?? true,
+            'show_in_menu' => $request->has('show_in_menu'),
         ];
 
         if ($request->hasFile('image')) {
@@ -88,6 +90,7 @@ class CategoryController extends Controller
             'slug' => 'nullable|string|unique:categories,slug,' . $category->id,
             'image' => 'nullable|image|max:2048',
             'is_active' => 'boolean',
+            'show_in_menu' => 'boolean',
         ]);
 
         $data = [
@@ -95,6 +98,7 @@ class CategoryController extends Controller
             'description' => $request->description,
             'slug' => $request->slug ?? Str::slug($request->name['en']),
             'is_active' => $request->is_active ?? true,
+            'show_in_menu' => $request->has('show_in_menu'),
         ];
 
         if ($request->hasFile('image')) {

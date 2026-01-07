@@ -91,27 +91,12 @@
                     {{ __('Shop') }}
                 </a>
 
-                <!-- Categories as Links as per image -->
-                <!-- Assuming standard categories exist or creating placeholders -->
-                <a href="{{ route('categories.show', 'bougies') }}" class="custom-nav-link">
-                    {{ __('Candles') }}
+                <!-- Categories as Links (Dynamic) -->
+                @foreach(\App\Models\Category::where('is_active', true)->where('show_in_menu', true)->get() as $category)
+                <a href="{{ route('categories.show', $category->slug) }}" class="custom-nav-link {{ request()->url() == route('categories.show', $category->slug) ? 'active' : '' }}">
+                    {{ $category->name[app()->getLocale()] ?? $category->name['en'] ?? $category->name }}
                 </a>
-
-                <a href="{{ route('categories.show', 'ceramique') }}" class="custom-nav-link">
-                    {{ __('Ceramics') }}
-                </a>
-
-                 <a href="{{ route('categories.show', 'textile') }}" class="custom-nav-link">
-                    {{ __('Textile & Customization') }}
-                </a>
-
-                 <a href="{{ route('services.index') }}" class="custom-nav-link {{ request()->routeIs('services.*') ? 'active' : '' }}">
-                    {{ __('Alterations & Sewing') }}
-                </a>
-                
-                 <a href="{{ route('categories.show', 'art-maison') }}" class="custom-nav-link">
-                    {{ __('Home Art') }}
-                </a>
+                @endforeach
                 
                  <a href="{{ route('about') }}" class="custom-nav-link {{ request()->routeIs('about') ? 'active' : '' }}">
                     {{ __('About') }}
