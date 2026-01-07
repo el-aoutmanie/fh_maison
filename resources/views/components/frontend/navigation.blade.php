@@ -77,12 +77,14 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         padding: 0.5rem 0;
         border-radius: 8px;
-        z-index: 1050;
+        z-index: 9999;
         transition: all 0.2s ease;
         transition: all 0.3s ease;
         transform: translateY(10px);
         margin-top: 0px;
         border: 1px solid rgba(0,0,0,0.05);
+        max-height: 400px;
+        overflow-y: auto;
     }
     
     [dir="rtl"] .dropdown-menu-custom {
@@ -159,11 +161,18 @@
                         <i class="fas fa-chevron-down opacity-50" style="font-size: 0.7em;"></i>
                     </a>
                     <div class="dropdown-menu-custom">
-                        @foreach(\App\Models\Category::where('is_active', true)->where('show_in_menu', true)->get() as $category)
+                        @php
+                            $categories = \App\Models\Category::where('is_active', true)->where('show_in_menu', true)->get();
+                        @endphp
+                        @forelse($categories as $category)
                         <a href="{{ route('categories.show', $category->slug) }}" class="dropdown-item-custom">
                             {{ $category->name[app()->getLocale()] ?? $category->name['en'] ?? $category->name }}
                         </a>
-                        @endforeach
+                        @empty
+                        <div class="dropdown-item-custom text-muted small" style="cursor: default;">
+                            {{ __('No categories available') }}
+                        </div>
+                        @endforelse
                     </div>
                 </div>
                 
@@ -256,7 +265,7 @@
                         </button>
                         
                         <!-- User Dropdown Menu -->
-                        <div class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-3" style="width: 280px;" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
+                        <div class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-3" style="width: 280px; max-height: 500px; overflow-y: auto; position: absolute;" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
                             <!-- User Info -->
                             <div class="mb-3 pb-3 border-bottom">
                                 <div class="d-flex align-items-center gap-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
