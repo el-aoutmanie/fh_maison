@@ -9,7 +9,7 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="position-relative overflow-hidden  text-white py-5" style="min-height: 400px; background-image:url('{{ asset('assets/serice-herosectio.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; background-color: rgba(0, 0, 0, 0.6); background-blend-mode: overlay;">
+<section class="position-relative overflow-hidden  text-white py-5" style="min-height: 400px; background-image:url('{{ asset('assets/services-hero.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; background-color: rgba(0, 0, 0, 0.6); background-blend-mode: overlay;">
     <!-- Decorative Elements -->
     <div class="position-absolute top-0 start-0 w-100 h-100 overflow-hidden" style="z-index: 0;">
         <div class="position-absolute rounded-circle animate-pulse-slow" 
