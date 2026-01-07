@@ -126,7 +126,7 @@
     
     <!-- Main Navigation -->
     <div class="container-fluid container-xxl py-3" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-        <div class="d-flex align-items-center justify-content-between {{ $isRtl ? 'flex-row-reverse' : '' }}" style="max-width: 100%; overflow-x: hidden;">
+        <div class="d-flex align-items-center justify-content-between {{ $isRtl ? 'flex-row-reverse' : '' }}">
             
             <!-- Logo & Mobile Menu -->
             <div class="d-flex align-items-center gap-4 {{ $isRtl ? 'flex-row-reverse' : '' }}">
