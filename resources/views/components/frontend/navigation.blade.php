@@ -59,10 +59,10 @@
     }
     
     .dropdown-hover:hover .dropdown-menu-custom {
-        display: block;
-        opacity: 1;
-        transform: translateY(0);
-        visibility: visible;
+        display: block !important;
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        visibility: visible !important;
     }
 
     .dropdown-menu-custom {
@@ -74,10 +74,11 @@
         left: 0;
         min-width: 220px;
         background-color: #fff;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         padding: 0.5rem 0;
-        border-radius: 4px;
+        border-radius: 8px;
         z-index: 1050;
+        transition: all 0.2s ease;
         transition: all 0.3s ease;
         transform: translateY(10px);
         margin-top: 0px;
@@ -104,9 +105,10 @@
     }
 
     .dropdown-item-custom:hover {
-        background-color: #f7f3ed;
-        color: #4a3b32;
+        background-color: #fef3c7;
+        color: #d97706;
         padding-left: 1.5rem;
+        font-weight: 500;
     }
     
     [dir="rtl"] .dropdown-item-custom:hover {
@@ -313,9 +315,14 @@
                     </div>
                 @else
                     <a href="{{ route('login') }}" 
-                       class="btn btn-amber-600 text-white px-4 py-2 rounded-3 fw-medium hover-amber"
-                       style="background: linear-gradient(135deg, #d97706, #b45309); border: none;">
+                       class="btn btn-amber-600 text-white px-3 px-lg-4 py-2 rounded-3 fw-medium hover-amber d-none d-sm-inline-block"
+                       style="background: linear-gradient(135deg, #d97706, #b45309); border: none; font-size: 0.875rem;">
                         {{ __('Login') }}
+                    </a>
+                    <a href="{{ route('login') }}" 
+                       class="btn btn-outline-light p-2 rounded-circle nav-icon-hover d-sm-none"
+                       style="border: none; color: #4b5563;">
+                        <i class="fas fa-user" style="font-size: 1.1rem;"></i>
                     </a>
                 @endauth
             </div>
@@ -843,6 +850,38 @@
     
     .search-submit {
         right: 1rem;
+    }
+    
+    .custom-nav .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+    
+    .custom-nav .d-flex.gap-3 {
+        gap: 0.5rem !important;
+    }
+    
+    .nav-icon-hover {
+        padding: 0.5rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .logo-text {
+        font-size: 0.9rem !important;
+    }
+    
+    img[alt="FH Maison Logo"] {
+        height: 40px !important;
+    }
+    
+    .custom-nav .container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    .d-flex.gap-3 {
+        gap: 0.4rem !important;
     }
 }
 </style>
