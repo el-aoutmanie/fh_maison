@@ -123,8 +123,8 @@
     @endphp
     
     <!-- Main Navigation -->
-    <div class="container py-3" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-        <div class="d-flex align-items-center justify-content-between {{ $isRtl ? 'flex-row-reverse' : '' }}">
+    <div class="container-fluid container-xxl py-3" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
+        <div class="d-flex align-items-center justify-content-between {{ $isRtl ? 'flex-row-reverse' : '' }}" style="max-width: 100%; overflow-x: hidden;">
             
             <!-- Logo & Mobile Menu -->
             <div class="d-flex align-items-center gap-4 {{ $isRtl ? 'flex-row-reverse' : '' }}">
@@ -183,7 +183,7 @@
 
 
             <!-- Action Buttons -->
-            <div class="d-flex align-items-center gap-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
+            <div class="d-flex align-items-center gap-3 {{ $isRtl ? 'flex-row-reverse' : '' }}" style="flex-shrink: 0;">
                 
                 <!-- Search Button -->
                 {{-- <button class="btn btn-outline-light p-2 rounded-circle nav-icon-hover"
@@ -852,7 +852,7 @@
         right: 1rem;
     }
     
-    .custom-nav .container {
+    .custom-nav .container-fluid {
         padding-left: 0.75rem;
         padding-right: 0.75rem;
     }
@@ -875,13 +875,17 @@
         height: 40px !important;
     }
     
-    .custom-nav .container {
+    .custom-nav .container-fluid {
         padding-left: 0.5rem;
         padding-right: 0.5rem;
     }
     
     .d-flex.gap-3 {
         gap: 0.4rem !important;
+    }
+    
+    .custom-nav .d-flex.align-items-center {
+        flex-wrap: nowrap !important;
     }
 }
 </style>
