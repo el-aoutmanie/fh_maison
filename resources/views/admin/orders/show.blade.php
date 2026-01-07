@@ -173,14 +173,14 @@
         </div>
 
         <!-- Payment Info -->
-        <div class="card border-0 shadow-sm">
+        <div class="card border-0 shadow-sm mb-4">
             <div class="card-header bg-white py-3">
                 <h6 class="fw-semibold mb-0">{{ __('Payment Information') }}</h6>
             </div>
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="text-muted small">{{ __('Method') }}</span>
-                    <span class="fw-semibold">{{ ucfirst($order->payment_method ?? 'N/A') }}</span>
+                    <span class="fw-semibold">{{ ucfirst(str_replace('_', ' ', $order->payment_method ?? 'N/A')) }}</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="text-muted small">{{ __('Status') }}</span>
@@ -190,6 +190,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- Tracking Info -->
+        @if($order->tracking_number)
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+                <h6 class="fw-semibold mb-0">{{ __('Tracking Information') }}</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-shipping-fast text-primary me-3 fs-4"></i>
+                    <div>
+                        <small class="text-muted d-block">{{ __('Tracking Number') }}</small>
+                        <span class="fw-bold">{{ $order->tracking_number }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <!-- Order Notes -->
+        @if($order->notes)
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h6 class="fw-semibold mb-0">{{ __('Order Notes') }}</h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-0 text-muted small">{{ $order->notes }}</p>
+            </div>
+        </div>
+        @endif
     </div>
 </div>
 @endsection

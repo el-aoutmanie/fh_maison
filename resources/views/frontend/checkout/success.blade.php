@@ -268,23 +268,5 @@
         @endauth
     </div>
 
-    <!-- Help Section -->
-    <div class="card border-0 shadow text-center">
-        <div class="card-body p-5">
-            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                <i class="fas fa-headset fs-1"></i>
-            </div>
-            <h4 class="fw-bold mb-3">{{ __('Need Help?') }}</h4>
-            <p class="text-muted mb-4">{{ __('Our customer support team is available 24/7 to assist you with any questions.') }}</p>
-            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-                <a href="#" class="btn btn-outline-secondary px-4">
-                    <i class="fas fa-envelope me-2"></i>{{ __('Email Support') }}
-                </a>
-                <a href="#" class="btn btn-primary px-4">
-                    <i class="fas fa-comments me-2"></i>{{ __('Live Chat') }}
-                </a>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection

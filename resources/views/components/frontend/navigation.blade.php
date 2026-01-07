@@ -175,7 +175,7 @@
                     </a>
                     <div class="dropdown-menu-custom">
                         @php
-                            $categories = \App\Models\Category::where('is_active', true)->where('show_in_menu', true)->get();
+                            $categories = \App\Models\Category::where('is_active', true)->get();
                         @endphp
                         @forelse($categories as $category)
                         <a href="{{ route('categories.show', $category->slug) }}" class="dropdown-item-custom">
@@ -422,7 +422,7 @@
                         {{ __('Categories') }}
                     </div>
                     <div class="mobile-categories-list">
-                        @foreach(\App\Models\Category::where('is_active', true)->where('show_in_menu', true)->get() as $category)
+                        @foreach(\App\Models\Category::where('is_active', true)->get() as $category)
                             <a href="{{ route('categories.show', $category->slug) }}" class="mobile-category-item">
                                 {{ $category->name[app()->getLocale()] ?? $category->name['en'] ?? $category->name }}
                             </a>

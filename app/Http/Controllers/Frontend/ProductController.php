@@ -51,14 +51,16 @@ class ProductController extends Controller
         // Sorting
         switch ($request->get('sort', 'newest')) {
             case 'price_asc':
-                $query->join('variants', 'products.id', '=', 'variants.product_id')
-                      ->select('products.*')
-                      ->orderBy('variants.price', 'asc');
+                $query->leftJoin('variants', 'products.id', '=', 'variants.product_id')
+                      ->select('products.*', \DB::raw('MIN(variants.price) as min_price'))
+                      ->groupBy('products.id')
+                      ->orderBy('min_price', 'asc');
                 break;
             case 'price_desc':
-                $query->join('variants', 'products.id', '=', 'variants.product_id')
-                      ->select('products.*')
-                      ->orderBy('variants.price', 'desc');
+                $query->leftJoin('variants', 'products.id', '=', 'variants.product_id')
+                      ->select('products.*', \DB::raw('MAX(variants.price) as max_price'))
+                      ->groupBy('products.id')
+                      ->orderBy('max_price', 'desc');
                 break;
             case 'name':
                 $locale = app()->getLocale();
@@ -111,16 +113,19 @@ class ProductController extends Controller
 
         // Apply the same sorting as the index method
         $sort = request()->get('sort', 'newest');
+        $locale = app()->getLocale();
         switch ($sort) {
             case 'price_asc':
-                $query->join('variants', 'products.id', '=', 'variants.product_id')
-                      ->select('products.*')
-                      ->orderBy('variants.price', 'asc');
+                $query->leftJoin('variants', 'products.id', '=', 'variants.product_id')
+                      ->select('products.*', \DB::raw('MIN(variants.price) as min_price'))
+                      ->groupBy('products.id')
+                      ->orderBy('min_price', 'asc');
                 break;
             case 'price_desc':
-                $query->join('variants', 'products.id', '=', 'variants.product_id')
-                      ->select('products.*')
-                      ->orderBy('variants.price', 'desc');
+                $query->leftJoin('variants', 'products.id', '=', 'variants.product_id')
+                      ->select('products.*', \DB::raw('MAX(variants.price) as max_price'))
+                      ->groupBy('products.id')
+                      ->orderBy('max_price', 'desc');
                 break;
             case 'name':
                 $query->orderBy("name->{$locale}");

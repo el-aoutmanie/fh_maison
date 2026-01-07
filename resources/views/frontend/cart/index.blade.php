@@ -7,7 +7,7 @@
 <div class="min-vh-100 bg-gradient-to-br from-gray-50 to-white py-5">
     <div class="container">
         <!-- Premium Page Header -->
-        <div class="mb-8" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
+        <div class="mb-8" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
             <div class="d-flex align-items-center mb-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
                 <div class="{{ $isRtl ? 'ms-3' : 'me-3' }}">
                     <i class="fas fa-diamond text-gold fs-4"></i>
