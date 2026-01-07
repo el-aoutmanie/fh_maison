@@ -58,11 +58,24 @@
         position: relative;
     }
     
-    .dropdown-hover:hover .dropdown-menu-custom {
-        display: block !important;
-        opacity: 1 !important;
-        transform: translateY(0) !important;
-        visibility: visible !important;
+    /* Desktop hover */
+    @media (min-width: 992px) {
+        .dropdown-hover:hover .dropdown-menu-custom {
+            display: block !important;
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            visibility: visible !important;
+        }
+    }
+    
+    /* Mobile tap */
+    @media (max-width: 991px) {
+        .dropdown-hover.active .dropdown-menu-custom {
+            display: block !important;
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            visibility: visible !important;
+        }
     }
 
     .dropdown-menu-custom {
@@ -154,8 +167,8 @@
                     {{ __('Shop') }}
                 </a>
 
-                <!-- Categories Dropdown -->
-                <div class="dropdown-hover">
+                <!-- Categories Dropdown - Hidden on Mobile -->
+                <div class="dropdown-hover d-none d-lg-block">
                     <a href="{{ route('products.index') }}" class="custom-nav-link d-flex align-items-center gap-1 {{ request()->routeIs('categories.*') ? 'active' : '' }}">
                         {{ __('Categories') }}
                         <i class="fas fa-chevron-down opacity-50" style="font-size: 0.7em;"></i>
