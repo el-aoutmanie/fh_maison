@@ -10,7 +10,7 @@
             <!-- Company Info -->
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="d-flex align-items-center gap-3 mb-4">
-                    <img src="{{ asset('assets/fhlogo.jpeg') }}" alt="FH Maison Logo" style="height: 60px; width: auto; filter: brightness(0) invert(1);">
+                    <img src="{{ asset('assets/fhlogo.jpeg') }}" alt="FH Maison Logo" style="height: 60px; width: auto;">
                 </div>
                 <p class="small mb-4">
                     {{ __('Your trusted destination for quality products and exceptional service.') }}

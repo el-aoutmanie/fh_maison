@@ -102,7 +102,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Wireless Headphones', 'ar' => 'سماعات لاسلكية', 'fr' => 'Casque sans fil'],
                 'description' => ['en' => 'Premium wireless headphones with noise cancellation and long battery life', 'ar' => 'سماعات لاسلكية فاخرة مع إلغاء الضوضاء وعمر بطارية طويل', 'fr' => 'Casque sans fil haut de gamme avec réduction de bruit et longue autonomie'],
                 'slug' => 'wireless-headphones',
-                'sku' => 'ELEC-WH-001',
                 'is_active' => true,
             ],
             [
@@ -110,7 +109,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Smartphone Case', 'ar' => 'حافظة هاتف ذكي', 'fr' => 'Étui pour smartphone'],
                 'description' => ['en' => 'Durable protective case for your smartphone', 'ar' => 'حافظة واقية متينة لهاتفك الذكي', 'fr' => 'Étui de protection durable pour votre smartphone'],
                 'slug' => 'smartphone-case',
-                'sku' => 'ELEC-SC-002',
                 'is_active' => true,
             ],
             [
@@ -118,7 +116,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Portable Charger', 'ar' => 'شاحن محمول', 'fr' => 'Chargeur portable'],
                 'description' => ['en' => '20000mAh power bank with fast charging', 'ar' => 'بنك طاقة 20000 مللي أمبير مع شحن سريع', 'fr' => 'Batterie externe 20000mAh avec charge rapide'],
                 'slug' => 'portable-charger',
-                'sku' => 'ELEC-PC-003',
                 'is_active' => true,
             ],
             // Fashion
@@ -127,7 +124,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Cotton T-Shirt', 'ar' => 'قميص قطني', 'fr' => 'T-shirt en coton'],
                 'description' => ['en' => '100% organic cotton t-shirt, comfortable and stylish', 'ar' => 'قميص قطن عضوي 100٪، مريح وأنيق', 'fr' => 'T-shirt 100% coton biologique, confortable et élégant'],
                 'slug' => 'cotton-tshirt',
-                'sku' => 'FASH-TS-004',
                 'is_active' => true,
             ],
             [
@@ -135,7 +131,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Denim Jeans', 'ar' => 'جينز دنيم', 'fr' => 'Jean en denim'],
                 'description' => ['en' => 'Classic blue denim jeans with perfect fit', 'ar' => 'جينز دنيم أزرق كلاسيكي بقصة مثالية', 'fr' => 'Jean en denim bleu classique avec coupe parfaite'],
                 'slug' => 'denim-jeans',
-                'sku' => 'FASH-DJ-005',
                 'is_active' => true,
             ],
             [
@@ -143,7 +138,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Leather Wallet', 'ar' => 'محفظة جلدية', 'fr' => 'Portefeuille en cuir'],
                 'description' => ['en' => 'Genuine leather wallet with multiple card slots', 'ar' => 'محفظة جلد طبيعي مع فتحات متعددة للبطاقات', 'fr' => 'Portefeuille en cuir véritable avec plusieurs emplacements pour cartes'],
                 'slug' => 'leather-wallet',
-                'sku' => 'FASH-LW-006',
                 'is_active' => true,
             ],
             // Home & Garden
@@ -152,7 +146,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Coffee Maker', 'ar' => 'صانعة قهوة', 'fr' => 'Cafetière'],
                 'description' => ['en' => 'Automatic coffee maker with programmable timer', 'ar' => 'صانعة قهوة أوتوماتيكية مع مؤقت قابل للبرمجة', 'fr' => 'Cafetière automatique avec minuterie programmable'],
                 'slug' => 'coffee-maker',
-                'sku' => 'HOME-CM-007',
                 'is_active' => true,
             ],
             [
@@ -160,7 +153,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Indoor Plant Pot', 'ar' => 'أصيص نباتات داخلي', 'fr' => 'Pot de plante d\'intérieur'],
                 'description' => ['en' => 'Modern ceramic plant pot for indoor plants', 'ar' => 'أصيص سيراميك عصري للنباتات الداخلية', 'fr' => 'Pot de plante en céramique moderne pour plantes d\'intérieur'],
                 'slug' => 'indoor-plant-pot',
-                'sku' => 'HOME-PP-008',
                 'is_active' => true,
             ],
             // Sports
@@ -169,7 +161,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Yoga Mat', 'ar' => 'سجادة يوغا', 'fr' => 'Tapis de yoga'],
                 'description' => ['en' => 'Non-slip yoga mat with carrying strap', 'ar' => 'سجادة يوغا غير قابلة للانزلاق مع حزام حمل', 'fr' => 'Tapis de yoga antidérapant avec sangle de transport'],
                 'slug' => 'yoga-mat',
-                'sku' => 'SPRT-YM-009',
                 'is_active' => true,
             ],
             [
@@ -177,7 +168,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Water Bottle', 'ar' => 'زجاجة ماء', 'fr' => 'Bouteille d\'eau'],
                 'description' => ['en' => 'Insulated stainless steel water bottle, 750ml', 'ar' => 'زجاجة ماء من الفولاذ المقاوم للصدأ معزولة، 750 مل', 'fr' => 'Bouteille d\'eau en acier inoxydable isolée, 750ml'],
                 'slug' => 'water-bottle',
-                'sku' => 'SPRT-WB-010',
                 'is_active' => true,
             ],
             // Books
@@ -186,7 +176,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Programming Book', 'ar' => 'كتاب برمجة', 'fr' => 'Livre de programmation'],
                 'description' => ['en' => 'Comprehensive guide to modern web development', 'ar' => 'دليل شامل لتطوير الويب الحديث', 'fr' => 'Guide complet du développement web moderne'],
                 'slug' => 'programming-book',
-                'sku' => 'BOOK-PB-011',
                 'is_active' => true,
             ],
             // Toys
@@ -195,7 +184,6 @@ class DatabaseSeeder extends Seeder
                 'name' => ['en' => 'Building Blocks Set', 'ar' => 'مجموعة مكعبات بناء', 'fr' => 'Ensemble de blocs de construction'],
                 'description' => ['en' => 'Creative building blocks set with 500 pieces', 'ar' => 'مجموعة مكعبات بناء إبداعية مكونة من 500 قطعة', 'fr' => 'Ensemble de blocs de construction créatifs avec 500 pièces'],
                 'slug' => 'building-blocks-set',
-                'sku' => 'TOYS-BB-012',
                 'is_active' => true,
             ],
         ];
@@ -252,7 +240,6 @@ class DatabaseSeeder extends Seeder
                 Variant::create([
                     'product_id' => $product->id,
                     'name' => ['en' => $variantName, 'ar' => $variantName, 'fr' => $variantName],
-                    'sku' => 'SKU-' . strtoupper(substr($product->slug, 0, 3)) . '-' . str_pad($index + 1, 3, '0', STR_PAD_LEFT),
                     'price' => $price,
                     'compare_at_price' => $index === 0 ? $price * 1.2 : null, // 20% off for first variant
                     'discount_amount' => $price * 0.1, // 10% discount

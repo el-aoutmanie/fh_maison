@@ -136,6 +136,7 @@
                 <!-- Logo -->
                 <a href="{{ route('home') }}" class="text-decoration-none d-flex align-items-center gap-2">
                    <img src="{{ asset('assets/fhlogo.jpeg') }}" alt="FH Maison Logo" style="height: 50px; width: auto;">
+                   <span class="fw-bold logo-text text-uppercase" style="font-size: 1.1rem;">FH MAISON</span>
                 </a>
             </div>
 
