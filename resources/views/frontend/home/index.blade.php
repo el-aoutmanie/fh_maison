@@ -62,8 +62,7 @@
         width: 100%; /* Full viewport width */
         min-height: 80vh; /* Taller hero */
         background-color: #eaddcf; /* Fallback beige */
-        /* Placeholder for background image - user can replace this URL */
-        background-image: url('https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop'); 
+        background-image: url('{{ asset('assets/heresection.png') }}');
         background-size: cover;
         background-position: center;
         display: flex;
