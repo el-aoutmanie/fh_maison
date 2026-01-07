@@ -167,6 +167,10 @@
                     </div>
                 </div>
                 
+                <a href="{{ route('services.index') }}" class="custom-nav-link {{ request()->routeIs('services.*') ? 'active' : '' }}">
+                    {{ __('Services') }}
+                </a>
+                
                  <a href="{{ route('about') }}" class="custom-nav-link {{ request()->routeIs('about') ? 'active' : '' }}">
                     {{ __('About') }}
                 </a>

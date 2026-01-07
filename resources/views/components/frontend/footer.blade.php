@@ -10,10 +10,10 @@
             <!-- Company Info -->
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="d-flex align-items-center gap-3 mb-4">
-                    <svg class="text-clay" width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                    <span class="fs-3 fw-bold text-white">{{ __('NounieStore') }}</span>
+                    <div class="p-2 border border-white rounded-1 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                        <span class="fw-bold text-white" style="font-family: serif; font-size: 1.1rem;">FH</span>
+                    </div>
+                    <span class="fs-3 fw-bold text-white">{{ __('FH Maison') }}</span>
                 </div>
                 <p class="small mb-4">
                     {{ __('Your trusted destination for quality products and exceptional service.') }}
@@ -111,7 +111,7 @@
                         <svg class="text-clay flex-shrink-0" style="width: 20px; height: 20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-                        <span class="small">info@nouniestore.com</span>
+                        <span class="small">info@fhmaison.fr</span>
                     </li>
                     <li class="d-flex align-items-center gap-3">
                         <svg class="text-clay flex-shrink-0" style="width: 20px; height: 20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -128,7 +128,7 @@
             <div class="row g-4 align-items-center">
                 <div class="col-12 col-md-4 text-center text-md-start">
                     <p class="small text-stone mb-0">
-                        &copy; {{ date('Y') }} {{ __('NounieStore. All rights reserved.') }}
+                        &copy; {{ date('Y') }} {{ __('FH Maison. All rights reserved.') }}
                     </p>
                 </div>
                 
