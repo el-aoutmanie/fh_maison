@@ -51,16 +51,14 @@ class ProductController extends Controller
         // Sorting
         switch ($request->get('sort', 'newest')) {
             case 'price_asc':
-                $query->leftJoin('variants', 'products.id', '=', 'variants.product_id')
-                      ->select('products.*', \DB::raw('MIN(variants.price) as min_price'))
-                      ->groupBy('products.id')
-                      ->orderBy('min_price', 'asc');
+                $query->addSelect(['min_price' => \App\Models\Variant::selectRaw('MIN(price)')
+                    ->whereColumn('product_id', 'products.id')
+                ])->orderBy('min_price', 'asc');
                 break;
             case 'price_desc':
-                $query->leftJoin('variants', 'products.id', '=', 'variants.product_id')
-                      ->select('products.*', \DB::raw('MAX(variants.price) as max_price'))
-                      ->groupBy('products.id')
-                      ->orderBy('max_price', 'desc');
+                $query->addSelect(['max_price' => \App\Models\Variant::selectRaw('MAX(price)')
+                    ->whereColumn('product_id', 'products.id')
+                ])->orderBy('max_price', 'desc');
                 break;
             case 'name':
                 $locale = app()->getLocale();
@@ -116,16 +114,14 @@ class ProductController extends Controller
         $locale = app()->getLocale();
         switch ($sort) {
             case 'price_asc':
-                $query->leftJoin('variants', 'products.id', '=', 'variants.product_id')
-                      ->select('products.*', \DB::raw('MIN(variants.price) as min_price'))
-                      ->groupBy('products.id')
-                      ->orderBy('min_price', 'asc');
+                $query->addSelect(['min_price' => \App\Models\Variant::selectRaw('MIN(price)')
+                    ->whereColumn('product_id', 'products.id')
+                ])->orderBy('min_price', 'asc');
                 break;
             case 'price_desc':
-                $query->leftJoin('variants', 'products.id', '=', 'variants.product_id')
-                      ->select('products.*', \DB::raw('MAX(variants.price) as max_price'))
-                      ->groupBy('products.id')
-                      ->orderBy('max_price', 'desc');
+                $query->addSelect(['max_price' => \App\Models\Variant::selectRaw('MAX(price)')
+                    ->whereColumn('product_id', 'products.id')
+                ])->orderBy('max_price', 'desc');
                 break;
             case 'name':
                 $query->orderBy("name->{$locale}");
