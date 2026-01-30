@@ -4,393 +4,186 @@
 @php
     $isRtl = LaravelLocalization::getCurrentLocaleDirection() === 'rtl';
 @endphp
-<div class="min-vh-100 bg-gradient-to-br from-gray-50 to-white py-5">
+<div class="min-vh-100 py-5">
     <div class="container">
-        <!-- Premium Page Header -->
-        <div class="mb-8" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-            <div class="d-flex align-items-center mb-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                <div class="{{ $isRtl ? 'ms-3' : 'me-3' }}">
-                    <i class="fas fa-diamond text-gold fs-4"></i>
-                </div>
-                <div>
-                    <h1 class="display-4 fw-bold text-gray-900 mb-2 letter-spacing-1">{{ __('Shopping Cart') }}</h1>
-                    <p class="text-gray-600 fs-5 mb-0">{{ __('Review your luxury selections') }}</p>
-                </div>
-            </div>
-            <div class="border-top border-gray-200 pt-3">
-                <span class="text-sm text-gray-500">{{ __('Curated Handcrafted Collections') }}</span>
-            </div>
+        <!-- Page Header -->
+        <div class="mb-5 text-center" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
+            <h1 class="display-5 fw-bold text-charcoal mb-2">{{ __('Shopping Cart') }}</h1>
+            <p class="text-stone fs-5 mb-0">{{ __('Review your luxury selections') }}</p>
         </div>
 
         @if(count($cartItems) > 0)
         <div class="row g-5">
-            <!-- Luxury Cart Items -->
+            <!-- Cart Items -->
             <div class="col-lg-8">
-                <div class="card rounded-4 overflow-hidden border-0 shadow-xxl bg-white position-relative">
-                    <!-- Premium Cart Header -->
-                    <div class="card-header p-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+                    <div class="card-header bg-white p-4 border-bottom border-sand">
                         <div class="d-flex align-items-center justify-content-between {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                            <div class="d-flex align-items-center {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                <div class="icon-wrapper bg-gold-soft rounded-circle p-3 {{ $isRtl ? 'ms-4' : 'me-4' }}">
-                                    <i class="fas fa-shopping-bag text-gold fs-5"></i>
-                                </div>
-                                <div>
-                                    <h2 class="fs-4 fw-semibold text-gray-900 mb-1">
-                                        {{ __('Your Selection') }}
-                                    </h2>
-                                    <p class="text-gray-600 mb-0">
-                                        {{ __('Items:') }} <span class="text-gold fw-bold">{{ count($cartItems) }}</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <button type="button" 
-                                    class="clear-cart-btn btn btn-outline-gray-300 btn-sm rounded-pill px-4 py-2 fw-medium hover-bg-danger-soft hover-border-danger">
-                                <i class="fas fa-eraser {{ $isRtl ? 'ms-2' : 'me-2' }}"></i> {{ __('Clear All') }}
+                            <h5 class="mb-0 fw-bold text-charcoal">{{ __('Cart Items') }} <span class="badge bg-parchment text-terracotta rounded-pill ms-2">{{ count($cartItems) }}</span></h5>
+                            <button type="button" class="clear-cart-btn btn btn-link text-stone hover-text-danger text-decoration-none small">
+                                <i class="fas fa-trash-alt me-1"></i> {{ __('Clear Cart') }}
                             </button>
                         </div>
                     </div>
-
-                    <!-- Luxury Cart Items List -->
                     <div class="card-body p-0">
                         @foreach($cartItems as $item)
-                        <div class="p-5 cart-item border-bottom border-gray-100 position-relative" data-row-id="{{ $item->rowId }}" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-                            <!-- Decorative border accent -->
-                            <div class="position-absolute top-0 {{ $isRtl ? 'end-0' : 'start-0' }} h-100 w-2 bg-gradient-to-b from-gold to-gold-dark opacity-10"></div>
-                            
-                            <div class="d-flex align-items-start gap-5 {{ LaravelLocalization::getCurrentLocaleDirection() === 'rtl' ? 'flex-row-reverse' : '' }}">
-                                <!-- Premium Product Image -->
-                                <div class="flex-shrink-0 position-relative">
-                                    <div class="image-frame rounded-4 overflow-hidden position-relative shadow-lg" 
-                                         style="width: 140px; height: 140px;">
-                                        <a href="{{ $item->options->product_slug ? route('products.show', $item->options->product_slug) : '#' }}">
-                                            @if($item->options->image)
-                                            <img src="{{ $item->options->image }}" 
-                                                 alt="{{ $item->name }}" 
-                                                 class="object-fit-cover w-100 h-100 hover-scale">
-                                            @else
-                                            <div class="w-100 h-100 bg-gradient-to-br from-gray-100 to-gray-200 d-flex align-items-center justify-content-center">
-                                                <i class="fas fa-gem text-gray-400 fs-1"></i>
+                        <div class="p-4 border-bottom border-light cart-item" data-row-id="{{ $item->rowId }}" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
+                            <div class="row align-items-center g-4">
+                                <!-- Product Image -->
+                                <div class="col-sm-3 col-4">
+                                    <div class="position-relative rounded-3 overflow-hidden ratio ratio-1x1 shadow-sm">
+                                        @if($item->options->image)
+                                            <img src="{{ $item->options->image }}" alt="{{ $item->name }}" class="object-fit-cover w-100 h-100">
+                                        @else
+                                            <div class="bg-light d-flex align-items-center justify-content-center h-100">
+                                                <i class="fas fa-image text-muted fs-2"></i>
                                             </div>
-                                            @endif
-                                        </a>
-                                        <!-- Image Badge -->
-                                        <div class="position-absolute top-0 end-0 mt-3 me-3">
-                                            <span class="badge bg-white text-gray-800 fw-medium px-3 py-2 rounded-pill shadow-sm">
-                                                <i class="fas fa-star text-warning me-1"></i> Premium
-                                            </span>
-                                        </div>
+                                        @endif
                                     </div>
                                 </div>
 
-                                <!-- Premium Product Details -->
-                                <div class="flex-fill">
-                                    <!-- Category Tag -->
-                                    <div class="mb-3">
-                                        <span class="badge bg-gold-soft text-gold-dark px-3 py-1 rounded-pill fw-medium">
-                                            <i class="fas fa-tag me-2"></i> {{ $item->options->category ?? 'Handcrafted' }}
-                                        </span>
+                                <!-- Product Details -->
+                                <div class="col-sm-9 col-8">
+                                    <div class="d-flex justify-content-between mb-2 {{ $isRtl ? 'flex-row-reverse' : '' }}">
+                                        <div>
+                                            <div class="mb-1">
+                                                <span class="badge bg-parchment text-terracotta small">{{ $item->options->category ?? 'Product' }}</span>
+                                            </div>
+                                            <a href="{{ $item->options->product_slug ? route('products.show', $item->options->product_slug) : '#' }}" class="text-decoration-none text-charcoal fw-bold fs-5 d-block mb-1">
+                                                {{ $item->name }}
+                                            </a>
+                                            <!-- Variant Selector -->
+                                            <div class="variant-selector mb-2" data-product-id="{{ $item->options->product_id }}" data-current-variant="{{ $item->id }}">
+                                                <div class="dropdown variant-dropdown">
+                                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle rounded-pill px-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <span class="current-variant-name">{{ $item->options->variant_name ?? 'Default' }}</span>
+                                                    </button>
+                                                    <ul class="dropdown-menu shadow-sm rounded-3">
+                                                        <li class="dropdown-header small text-muted">{{ __('Select Variant') }}</li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li class="px-3 py-2 text-center loading-variants">
+                                                            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="d-block fw-bold text-terracotta fs-5 item-price">${{ number_format($item->price, 2) }}</span>
+                                        </div>
                                     </div>
-                                    
-                                    <a href="{{ $item->options->product_slug ? route('products.show', $item->options->product_slug) : '#' }}" 
-                                       class="fs-3 fw-bold text-gray-900 hover-gold text-decoration-none d-block mb-3">
-                                        {{ $item->name }}
-                                    </a>
-                                    
-                                    <!-- Variant Selector -->
-                                    <div class="variant-selector mb-3" data-product-id="{{ $item->options->product_id }}" data-current-variant="{{ $item->id }}">
-                                        <div class="d-flex align-items-center gap-3 flex-wrap {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                            <span class="text-gray-600 small fw-medium">{{ __('Variant:') }}</span>
-                                            <div class="dropdown variant-dropdown">
-                                                <button class="btn btn-outline-gray-300 dropdown-toggle rounded-pill px-4 py-2 d-flex align-items-center gap-2" 
-                                                        type="button" 
-                                                        data-bs-toggle="dropdown" 
-                                                        aria-expanded="false">
-                                                    <span class="current-variant-name">{{ $item->options->variant_name ?? 'Default' }}</span>
-                                                    <span class="current-variant-price text-gold fw-bold">${{ number_format($item->price, 2) }}</span>
+
+                                    <div class="d-flex justify-content-between align-items-end mt-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
+                                        <!-- Quantity Control -->
+                                        <div class="quantity-control">
+                                            <div class="input-group input-group-sm border border-secondary rounded-pill overflow-hidden" style="width: 120px;">
+                                                <button class="btn btn-light update-quantity px-3" type="button" data-action="decrease">
+                                                    <i class="fas fa-minus small"></i>
                                                 </button>
-                                                <ul class="dropdown-menu variant-options shadow-lg rounded-3 p-2" style="min-width: 250px;">
-                                                    <li class="dropdown-header text-gray-600 small px-3 py-2">
-                                                        <i class="fas fa-palette me-2"></i>{{ __('Select Variant') }}
-                                                    </li>
-                                                    <li><hr class="dropdown-divider"></li>
-                                                    <li class="text-center py-3 loading-variants">
-                                                        <span class="spinner-border spinner-border-sm text-gold me-2"></span>
-                                                        {{ __('Loading variants...') }}
-                                                    </li>
-                                                </ul>
+                                                <input type="number" class="form-control text-center border-0 bg-white quantity-input p-0" value="{{ $item->qty }}" min="1" max="{{ $item->options->stock }}" readonly>
+                                                <button class="btn btn-light update-quantity px-3" type="button" data-action="increase">
+                                                    <i class="fas fa-plus small"></i>
+                                                </button>
                                             </div>
-                                            <button type="button" 
-                                                    class="btn btn-link text-gold p-0 refresh-variants" 
-                                                    title="{{ __('Refresh variants') }}">
-                                                <i class="fas fa-sync-alt"></i>
-                                            </button>
                                         </div>
-                                    </div>
-                                    
-                                    <!-- Price Display -->
-                                    <div class="mb-4">
-                                        <p class="text-gray-600 mb-1">{{ __('Unit Price') }}</p>
-                                        <div class="d-flex align-items-center">
-                                            <span class="fs-4 fw-bold text-gray-900 item-price">${{ number_format($item->price, 2) }}</span>
-                                            <span class="text-gray-500 mx-2">•</span>
-                                            <span class="text-sm text-gray-600">Inclusive of VAT</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Stock Status -->
-                                    @if($item->options->stock <= 5)
-                                    <div class="d-flex align-items-center gap-2 bg-red-50 rounded-3 px-3 py-2 border border-red-200 stock-warning {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                        <i class="fas fa-clock text-red-500"></i>
-                                        <span class="text-red-700 fw-medium small stock-text">
-                                            {{ __('Only :stock left in stock', ['stock' => $item->options->stock]) }}
-                                        </span>
-                                    </div>
-                                    @else
-                                    <div class="d-flex align-items-center gap-2 bg-green-50 rounded-3 px-3 py-2 border border-green-200 stock-warning d-none {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                        <i class="fas fa-check-circle text-green-500"></i>
-                                        <span class="text-green-700 fw-medium small stock-text">
-                                            {{ __('In Stock') }}
-                                        </span>
-                                    </div>
-                                    @endif
-                                </div>
 
-                                <!-- Premium Controls & Subtotal -->
-                                <div class="d-flex flex-column align-items-end gap-4">
-                                    <!-- Quantity Controls -->
-                                    <div class="text-center">
-                                        <p class="small text-gray-600 mb-2 fw-medium">{{ __('Quantity') }}</p>
-                                        <div class="d-flex align-items-center gap-3 bg-white border border-gray-200 rounded-4 p-2 shadow-sm">
-                                            <button type="button" 
-                                                    class="update-quantity btn btn-outline-gray-300 rounded-circle hover-bg-gold hover-border-gold hover-text-white d-flex align-items-center justify-content-center"
-                                                    style="width: 40px; height: 40px;"
-                                                    data-action="decrease">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                            <div class="position-relative">
-                                                <input type="number" 
-                                                       class="quantity-input form-control border-0 text-center fw-bold text-gray-900 bg-transparent" 
-                                                       style="width: 60px; font-size: 1.1rem;"
-                                                       value="{{ $item->qty }}" 
-                                                       min="1" 
-                                                       max="{{ $item->options->stock }}"
-                                                       readonly>
-                                                <div class="position-absolute bottom-0 start-50 translate-middle-x w-50 border-bottom border-gold opacity-50"></div>
+                                        <!-- Subtotal & Remove -->
+                                        <div class="text-end">
+                                            <div class="mb-2">
+                                                <small class="text-muted d-block">{{ __('Subtotal') }}</small>
+                                                <span class="item-subtotal fw-bold text-charcoal">${{ number_format($item->subtotal, 2) }}</span>
                                             </div>
-                                            <button type="button" 
-                                                    class="update-quantity btn btn-outline-gray-300 rounded-circle hover-bg-gold hover-border-gold hover-text-white d-flex align-items-center justify-content-center"
-                                                    style="width: 40px; height: 40px;"
-                                                    data-action="increase">
-                                                <i class="fas fa-plus"></i>
+                                            <button type="button" class="btn btn-link link-danger p-0 text-decoration-none small remove-item">
+                                                <i class="fas fa-trash me-1"></i> {{ __('Remove') }}
                                             </button>
                                         </div>
                                     </div>
-
-                                    <!-- Subtotal -->
-                                    <div class="text-end">
-                                        <p class="small text-gray-600 mb-2">{{ __('Item Total') }}</p>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span class="item-subtotal fs-2 fw-bold text-gray-900">
-                                                ${{ number_format($item->subtotal, 2) }}
-                                            </span>
-                                            <i class="fas fa-equals text-gray-400"></i>
-                                        </div>
-                                    </div>
-
-                                    <!-- Remove Button -->
-                                    <button type="button" 
-                                            class="remove-item btn btn-link text-gray-500 hover-text-danger text-decoration-none d-flex align-items-center gap-2 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                        <i class="fas fa-times-circle"></i>
-                                        <span class="fw-medium">{{ __('Remove') }}</span>
-                                    </button>
                                 </div>
                             </div>
                         </div>
                         @endforeach
                     </div>
                 </div>
-
-                <!-- Continue Shopping -->
-                <div class="mt-6" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-                    <a href="{{ route('products.index') }}" 
-                       class="btn btn-outline-gray-300 rounded-pill px-5 py-3 fw-medium hover-bg-gray-900 hover-text-white d-inline-flex align-items-center gap-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                        <i class="fas fa-chevron-left {{ LaravelLocalization::getCurrentLocaleDirection() === 'rtl' ? 'd-none' : '' }}"></i>
-                        <i class="fas fa-chevron-right {{ LaravelLocalization::getCurrentLocaleDirection() === 'rtl' ? '' : 'd-none' }}"></i>
-                        {{ __('Continue Exploring') }}
+                
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a href="{{ route('products.index') }}" class="btn btn-outline-primary rounded-pill px-4">
+                        <i class="fas fa-arrow-left me-2"></i> {{ __('Continue Shopping') }}
                     </a>
                 </div>
             </div>
 
-            <!-- Luxury Order Summary -->
+            <!-- Order Summary -->
             <div class="col-lg-4">
-                <div class="sticky-top" style="top: 100px;">
-                    <div class="card rounded-4 overflow-hidden border-0 shadow-xxl">
-                        <!-- Premium Header -->
-                        <div class="card-header text-white p-5" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-                            <div class="d-flex align-items-center justify-content-between {{ $isRtl ? 'flex-row-reverse' : '' }}">
+                <div class="card border-0 shadow rounded-4 overflow-hidden sticky-top" style="top: 2rem;">
+                    <div class="card-header bg-gradient-terracotta text-white p-4">
+                        <h4 class="mb-0 fw-bold fs-5">{{ __('Order Summary') }}</h4>
+                    </div>
+                    <div class="card-body p-4 bg-white">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-stone">{{ __('Subtotal') }}</span>
+                            <span class="fw-bold cart-subtotal">${{ $subtotal }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-stone">{{ __('Tax') }}</span>
+                            <span class="fw-bold cart-tax">${{ $tax }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 align-items-center">
+                            <span class="text-stone">{{ __('Shipping') }}</span>
+                            @if(isset($shippingTotal) && $shippingTotal > 0)
                                 <div>
-                                    <h3 class="fs-4 fw-semibold mb-2">{{ __('Order Summary') }}</h3>
-                                    <p class="text-gray-300 mb-0 small">{{ __('Complete your luxury purchase') }}</p>
+                                    <span class="d-block fw-bold text-end cart-shipping">${{ number_format($shippingTotal, 2) }}</span>
+                                    <small class="text-muted d-block text-end" style="font-size: 0.75rem;">{{ __('Based on items') }}</small>
                                 </div>
-                                <div class="icon-wrapper bg-gold/20 rounded-circle p-3">
-                                    <i class="fas fa-receipt text-gold"></i>
-                                </div>
-                            </div>
+                            @else
+                                <span class="text-success fw-bold cart-shipping">{{ __('Free') }}</span>
+                            @endif
+                        </div>
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="text-stone">{{ __('Discount') }}</span>
+                            <span class="text-success fw-bold">-$0.00</span>
                         </div>
                         
-                        <!-- Summary Body -->
-                        <div class="card-body p-5 bg-gray-50" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-                            <!-- Summary Items -->
-                            <div class="space-y-4 mb-5">
-                                <!-- Subtotal -->
-                                <div class="d-flex justify-content-between align-items-center py-3 border-bottom border-gray-200 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                    <div class="d-flex align-items-center gap-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                        <i class="fas fa-cube text-gray-400"></i>
-                                        <span class="text-gray-600">{{ __('Subtotal') }}</span>
-                                    </div>
-                                    <span class="fs-5 fw-bold text-gray-900 cart-subtotal">${{ $subtotal }}</span>
-                                </div>
-                                
-                                <!-- Tax -->
-                                <div class="d-flex justify-content-between align-items-center py-3 border-bottom border-gray-200 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                    <div class="d-flex align-items-center gap-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                        <i class="fas fa-percentage text-gray-400"></i>
-                                        <span class="text-gray-600">{{ __('Tax') }}</span>
-                                    </div>
-                                    <span class="fs-5 fw-bold text-gray-900 cart-tax">${{ $tax }}</span>
-                                </div>
-                                
-                                <!-- Shipping -->
-                                <div class="d-flex justify-content-between align-items-center py-3 border-bottom border-gray-200 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                    <div class="d-flex align-items-center gap-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                        <i class="fas fa-shipping-fast text-success"></i>
-                                        <span class="text-gray-600">{{ __('Shipping') }}</span>
-                                    </div>
-                                    <div class="text-end">
-                                        @if(isset($shippingTotal) && $shippingTotal > 0)
-                                            <span class="fw-bold cart-shipping">${{ number_format($shippingTotal, 2) }}</span>
-                                            <p class="text-gray-500 small mb-0">{{ __('Based on product shipping') }}</p>
-                                        @else
-                                            <span class="text-success fw-bold cart-shipping">{{ __('Free') }}</span>
-                                            <p class="text-gray-500 small mb-0">Express Delivery</p>
-                                        @endif
-                                    </div>
-                                </div>
-                                
-                                <!-- Discount -->
-                                <div class="d-flex justify-content-between align-items-center py-3 border-bottom border-gray-200 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                    <div class="d-flex align-items-center gap-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                        <i class="fas fa-tag text-gold"></i>
-                                        <span class="text-gray-600">{{ __('Discount') }}</span>
-                                    </div>
-                                    <span class="text-success fw-bold">-$0.00</span>
-                                </div>
+                        <hr class="border-sand my-4">
+                        
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="fs-5 fw-bold text-charcoal">{{ __('Total') }}</span>
+                            <span class="fs-4 fw-bold text-terracotta cart-total">${{ $total }}</span>
+                        </div>
+                        
+                        <button onclick="window.location.href='{{ route('checkout.index') }}'" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm">
+                            {{ __('Proceed to Checkout') }} <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                        
+                        <div class="mt-4 text-center">
+                             <div class="d-flex justify-content-center gap-2 text-stone opacity-50">
+                                <i class="fab fa-cc-visa fa-2x"></i>
+                                <i class="fab fa-cc-mastercard fa-2x"></i>
+                                <i class="fab fa-cc-paypal fa-2x"></i>
                             </div>
-
-                            <!-- Total -->
-                            <div class="bg-white rounded-4 p-4 border border-gray-200 shadow-sm mb-6">
-                                <div class="d-flex justify-content-between align-items-center {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                    <div>
-                                        <p class="text-gray-600 mb-1">{{ __('Total Amount') }}</p>
-                                        <p class="text-gray-500 small mb-0">Including all taxes</p>
-                                    </div>
-                                    <span class="display-6 fw-bold text-gray-900 cart-total">${{ $total }}</span>
-                                </div>
-                            </div>
-
-                            <!-- Premium Checkout Button -->
-                            <button onclick="window.location.href='{{ route('checkout.index') }}'"
-                                   class="btn btn-dark w-100 py-4 rounded-pill fw-bold fs-5 shadow-lg hover-shadow-xl mb-4 hover-transform-up">
-                                {{ __('Proceed to Checkout') }}
-                                <i class="fas fa-arrow-right ms-3 {{ LaravelLocalization::getCurrentLocaleDirection() === 'rtl' ? 'd-none' : '' }}"></i>
-                                <i class="fas fa-arrow-left me-3 {{ LaravelLocalization::getCurrentLocaleDirection() === 'rtl' ? '' : 'd-none' }}"></i>
-                            </button>
-
-                            <!-- Secure Payment Info -->
-                            <div class="text-center mb-5">
-                                <p class="text-gray-600 small mb-3">{{ __('Secure Payment By') }}</p>
-                                <div class="d-flex justify-content-center gap-3">
-                                    <i class="fab fa-cc-visa text-gray-400 fs-4"></i>
-                                    <i class="fab fa-cc-mastercard text-gray-400 fs-4"></i>
-                                    <i class="fab fa-cc-amex text-gray-400 fs-4"></i>
-                                    <i class="fab fa-cc-paypal text-gray-400 fs-4"></i>
-                                </div>
-                            </div>
-
-                            <!-- Luxury Trust Badges -->
-                            <div class="border-top border-gray-200 pt-5">
-                                <div class="row g-3">
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-4 border border-gray-100 shadow-xs {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                            <div class="icon-wrapper bg-blue-50 rounded-circle p-2">
-                                                <i class="fas fa-shield-alt text-blue-600"></i>
-                                            </div>
-                                            <div>
-                                                <p class="small text-gray-900 fw-medium mb-0">{{ __('Secure') }}</p>
-                                                <p class="small text-gray-600 mb-0">256-bit SSL</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-4 border border-gray-100 shadow-xs {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                            <div class="icon-wrapper bg-green-50 rounded-circle p-2">
-                                                <i class="fas fa-truck text-green-600"></i>
-                                            </div>
-                                            <div>
-                                                <p class="small text-gray-900 fw-medium mb-0">{{ __('Fast') }}</p>
-                                                <p class="small text-gray-600 mb-0">1-3 Days</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-4 border border-gray-100 shadow-xs {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                            <div class="icon-wrapper bg-purple-50 rounded-circle p-2">
-                                                <i class="fas fa-undo text-purple-600"></i>
-                                            </div>
-                                            <div>
-                                                <p class="small text-gray-900 fw-medium mb-0">{{ __('Returns') }}</p>
-                                                <p class="small text-gray-600 mb-0">30 Days</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-4 border border-gray-100 shadow-xs {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                                            <div class="icon-wrapper bg-amber-50 rounded-circle p-2">
-                                                <i class="fas fa-headset text-amber-600"></i>
-                                            </div>
-                                            <div>
-                                                <p class="small text-gray-900 fw-medium mb-0">{{ __('Support') }}</p>
-                                                <p class="small text-gray-600 mb-0">24/7</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <p class="small text-muted mt-2 mb-0"><i class="fas fa-lock me-1"></i> {{ __('Secure Checkout') }}</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         @else
-        <!-- Luxury Empty Cart -->
-        <div class="text-center py-8" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-gradient-to-br from-gray-50 to-white mb-6 shadow-xxl p-8">
-                <i class="fas fa-gem text-gold" style="font-size: 4rem;"></i>
+        <!-- Empty Cart -->
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <div class="d-inline-block p-4 rounded-circle bg-parchment text-terracotta mb-3">
+                    <i class="fas fa-shopping-basket fa-4x"></i>
+                </div>
             </div>
-            <h2 class="display-5 fw-bold text-gray-900 mb-4 letter-spacing-1">{{ __('Your Cart Awaits') }}</h2>
-            <p class="text-gray-600 fs-5 mb-6 max-w-2xl mx-auto">
-                {{ __('Discover handcrafted luxury pieces curated for the discerning collector. Begin your journey into exquisite craftsmanship.') }}
-            </p>
-            <a href="{{ route('products.index') }}" 
-               class="btn btn-dark btn-lg px-6 py-4 rounded-pill fw-bold shadow-lg hover-shadow-xl d-inline-flex align-items-center gap-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                {{ __('Explore Collections') }}
-                <i class="fas fa-arrow-right {{ LaravelLocalization::getCurrentLocaleDirection() === 'rtl' ? 'd-none' : '' }}"></i>
-                <i class="fas fa-arrow-left {{ LaravelLocalization::getCurrentLocaleDirection() === 'rtl' ? '' : 'd-none' }}"></i>
+            <h2 class="fw-bold text-charcoal mb-3">{{ __('Your Cart is Empty') }}</h2>
+            <p class="text-stone mb-4 lead">{{ __('Looks like you haven\'t added any luxury items yet.') }}</p>
+            <a href="{{ route('products.index') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">
+                {{ __('Start Shopping') }}
             </a>
         </div>
         @endif
     </div>
 </div>
+@endsection
 
 @push('scripts')
 <script>
@@ -534,13 +327,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     const isSelected = variant.id == currentVariant;
                     const isDisabled = !variant.in_stock;
                     const stockBadge = variant.in_stock 
-                        ? `<span class="badge bg-success-soft text-success ms-auto">${variant.stock} {{ __('in stock') }}</span>`
-                        : `<span class="badge bg-danger-soft text-danger ms-auto">{{ __('Out of Stock') }}</span>`;
+                        ? `<span class="badge bg-success bg-opacity-10 text-success ms-auto">${variant.stock} {{ __('in stock') }}</span>`
+                        : `<span class="badge bg-danger bg-opacity-10 text-danger ms-auto">{{ __('Out of Stock') }}</span>`;
                     
                     html += `
                         <li>
                             <button type="button" 
-                                    class="dropdown-item variant-option d-flex align-items-center gap-2 rounded-2 py-2 px-3 ${isSelected ? 'active bg-gold-soft' : ''} ${isDisabled ? 'disabled opacity-50' : ''}"
+                                    class="dropdown-item variant-option d-flex align-items-center gap-2 rounded-2 py-2 px-3 ${isSelected ? 'active bg-primary bg-opacity-10 text-primary' : ''} ${isDisabled ? 'disabled opacity-50' : ''}"
                                     data-variant-id="${variant.id}"
                                     data-variant-name="${variant.name}"
                                     data-variant-price="${variant.price}"
@@ -548,10 +341,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                     ${isDisabled ? 'disabled' : ''}>
                                 <div class="flex-fill">
                                     <span class="d-block fw-medium">${variant.name}</span>
-                                    <span class="text-gold fw-bold">$${variant.price}</span>
+                                    <span class="fw-bold">$${variant.price}</span>
                                 </div>
                                 ${stockBadge}
-                                ${isSelected ? '<i class="fas fa-check text-gold"></i>' : ''}
+                                ${isSelected ? '<i class="fas fa-check text-primary"></i>' : ''}
                             </button>
                         </li>
                     `;
@@ -619,7 +412,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Update variant name and price in dropdown
                 dropdownBtn.innerHTML = `
                     <span class="current-variant-name">${data.item.variant_name || 'Default'}</span>
-                    <span class="current-variant-price text-gold fw-bold">$${data.item.price}</span>
                 `;
                 dropdownBtn.disabled = false;
                 
@@ -656,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </li>
                     <li><hr class="dropdown-divider"></li>
                     <li class="text-center py-3 loading-variants">
-                        <span class="spinner-border spinner-border-sm text-gold me-2"></span>
+                        <span class="spinner-border spinner-border-sm text-primary me-2"></span>
                         {{ __('Loading variants...') }}
                     </li>
                 `;
