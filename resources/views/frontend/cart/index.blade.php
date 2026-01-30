@@ -267,8 +267,13 @@
                                         <span class="text-gray-600">{{ __('Shipping') }}</span>
                                     </div>
                                     <div class="text-end">
-                                        <span class="text-success fw-bold">{{ __('Free') }}</span>
-                                        <p class="text-gray-500 small mb-0">Express Delivery</p>
+                                        @if(isset($shippingTotal) && $shippingTotal > 0)
+                                            <span class="fw-bold cart-shipping">${{ number_format($shippingTotal, 2) }}</span>
+                                            <p class="text-gray-500 small mb-0">{{ __('Based on product shipping') }}</p>
+                                        @else
+                                            <span class="text-success fw-bold cart-shipping">{{ __('Free') }}</span>
+                                            <p class="text-gray-500 small mb-0">Express Delivery</p>
+                                        @endif
                                     </div>
                                 </div>
                                 

@@ -11,7 +11,7 @@ class Product extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable = ['name', 'slug', 'description', 'features', 'category_id', 'measuring_unit', 'is_active', 'is_featured'];
+    protected $fillable = ['name', 'slug', 'description', 'features', 'category_id', 'measuring_unit', 'is_active', 'is_featured', 'shipping_price'];
 
     protected $casts = [
         'name' => 'array',
@@ -19,6 +19,7 @@ class Product extends Model implements HasMedia
         'features' => 'array',
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
+        'shipping_price' => 'decimal:2',
     ];
 
     public function category()

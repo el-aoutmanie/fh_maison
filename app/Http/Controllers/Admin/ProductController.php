@@ -68,6 +68,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
+            'shipping_price' => 'nullable|numeric|min:0',
             'variants' => 'required|array|min:1',
             'variants.*.name.en' => 'required|string|max:255',
             'variants.*.name.ar' => 'nullable|string|max:255',
@@ -88,6 +89,7 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
             'is_active' => $request->is_active ?? true,
             'is_featured' => $request->is_featured ?? false,
+            'shipping_price' => $request->shipping_price ?? 0,
         ];
 
         $product = Product::create($data);
@@ -162,6 +164,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
+            'shipping_price' => 'nullable|numeric|min:0',
             'variants' => 'required|array|min:1',
             'variants.*.id' => 'nullable|exists:variants,id',
             'variants.*.name.en' => 'required|string|max:255',
@@ -201,6 +204,7 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
             'is_active' => $request->is_active ?? true,
             'is_featured' => $request->is_featured ?? false,
+            'shipping_price' => $request->shipping_price ?? 0,
         ]);
 
         // Get existing variant IDs

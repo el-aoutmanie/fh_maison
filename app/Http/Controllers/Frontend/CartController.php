@@ -18,9 +18,37 @@ class CartController extends Controller
         $cartItems = Cart::content();
         $subtotal = Cart::subtotal();
         $tax = Cart::tax();
-        $total = Cart::total();
         
-        return view('frontend.cart.index', compact('cartItems', 'subtotal', 'tax', 'total'));
+        // Calculate shipping from products
+        $shippingTotal = $this->calculateShipping($cartItems);
+        
+        // Add shipping to total
+        $cartTotal = floatval(str_replace(',', '', Cart::total()));
+        $total = number_format($cartTotal + $shippingTotal, 2);
+        
+        return view('frontend.cart.index', compact('cartItems', 'subtotal', 'tax', 'total', 'shippingTotal'));
+    }
+
+    /**
+     * Calculate total shipping from cart items
+     */
+    protected function calculateShipping($cartItems)
+    {
+        $shippingTotal = 0;
+        
+        foreach ($cartItems as $item) {
+            $productId = $item->options->product_id ?? null;
+            
+            if ($productId) {
+                $product = Product::find($productId);
+                if ($product && $product->shipping_price > 0) {
+                    // Charge shipping per item quantity
+                    $shippingTotal += $product->shipping_price * $item->qty;
+                }
+            }
+        }
+        
+        return $shippingTotal;
     }
 
     /**

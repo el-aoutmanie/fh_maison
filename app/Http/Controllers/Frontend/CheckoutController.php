@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Customer;
+use App\Models\Product;
+use App\Models\Variant;
 use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\DB;
@@ -37,14 +39,42 @@ class CheckoutController extends Controller
         $cartItems = Cart::content();
         $subtotal = Cart::subtotal();
         $tax = Cart::tax();
-        $total = Cart::total();
+        
+        // Calculate shipping from products
+        $shippingTotal = $this->calculateShipping($cartItems);
+        
+        // Add shipping to total
+        $cartTotal = floatval(str_replace(',', '', Cart::total()));
+        $total = number_format($cartTotal + $shippingTotal, 2);
         
         $customer = null;
         if (Auth::check()) {
             $customer = Customer::where('user_id', Auth::id())->first();
         }
         
-        return view('frontend.checkout.index', compact('cartItems', 'subtotal', 'tax', 'total', 'customer'));
+        return view('frontend.checkout.index', compact('cartItems', 'subtotal', 'tax', 'total', 'shippingTotal', 'customer'));
+    }
+
+    /**
+     * Calculate total shipping from cart items
+     */
+    protected function calculateShipping($cartItems)
+    {
+        $shippingTotal = 0;
+        
+        foreach ($cartItems as $item) {
+            $productId = $item->options->product_id ?? null;
+            
+            if ($productId) {
+                $product = Product::find($productId);
+                if ($product && $product->shipping_price > 0) {
+                    // Charge shipping per item quantity
+                    $shippingTotal += $product->shipping_price * $item->qty;
+                }
+            }
+        }
+        
+        return $shippingTotal;
     }
 
     /**
@@ -108,7 +138,11 @@ class CheckoutController extends Controller
             // Calculate amounts
             $subtotal = floatval(str_replace(',', '', Cart::subtotal()));
             $tax = floatval(str_replace(',', '', Cart::tax()));
-            $total = floatval(str_replace(',', '', Cart::total()));
+            $cartTotal = floatval(str_replace(',', '', Cart::total()));
+            
+            // Calculate shipping from products
+            $shippingTotal = $this->calculateShipping(Cart::content());
+            $total = $cartTotal + $shippingTotal;
             
             // Create order
             $order = Order::create([
@@ -116,7 +150,7 @@ class CheckoutController extends Controller
                 'code' => 'ORD-' . strtoupper(uniqid()),
                 'subtotal' => $subtotal,
                 'total_amount' => $total,
-                'shipping_amount' => 0, // Free shipping
+                'shipping_amount' => $shippingTotal,
                 'status' => 'pending',
                 'payment_method' => $request->payment_method,
                 'payment_status' => 'pending',
@@ -172,6 +206,21 @@ class CheckoutController extends Controller
                                 'unit_amount' => intval($item->price * 100), // Convert to cents
                             ],
                             'quantity' => $item->qty,
+                        ];
+                    }
+                    
+                    // Add shipping as a line item if there's shipping cost
+                    if ($shippingTotal > 0) {
+                        $lineItems[] = [
+                            'price_data' => [
+                                'currency' => 'usd',
+                                'product_data' => [
+                                    'name' => __('Shipping'),
+                                    'description' => __('Shipping & Handling'),
+                                ],
+                                'unit_amount' => intval($shippingTotal * 100), // Convert to cents
+                            ],
+                            'quantity' => 1,
                         ];
                     }
                     

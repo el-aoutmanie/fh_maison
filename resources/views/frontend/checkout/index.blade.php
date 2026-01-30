@@ -275,7 +275,11 @@
                         
                         <div class="d-flex justify-content-between text-stone mb-3 {{ $isRtl ? 'flex-row-reverse' : '' }}">
                             <span>{{ __('Shipping') }}</span>
-                            <span class="text-success fw-semibold">{{ __('Free') }}</span>
+                            @if(isset($shippingTotal) && $shippingTotal > 0)
+                                <span class="fw-semibold">${{ number_format($shippingTotal, 2) }}</span>
+                            @else
+                                <span class="text-success fw-semibold">{{ __('Free') }}</span>
+                            @endif
                         </div>
                         
                         <div class="border-top border-sand pt-3 mb-4">

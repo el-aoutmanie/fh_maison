@@ -142,14 +142,18 @@
                             </div>
                             <div class="d-flex justify-content-between mb-3">
                                 <span class="text-muted">{{ __('Shipping') }}</span>
-                                <span class="text-success fw-semibold">
-                                    <i class="fas fa-check-circle me-1"></i>{{ __('Free') }}
-                                </span>
+                                @if($order->shipping_amount > 0)
+                                    <span class="fw-semibold">${{ number_format($order->shipping_amount, 2) }}</span>
+                                @else
+                                    <span class="text-success fw-semibold">
+                                        <i class="fas fa-check-circle me-1"></i>{{ __('Free') }}
+                                    </span>
+                                @endif
                             </div>
                             <div class="border-top pt-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="fw-bold">{{ __('Total') }}</span>
-                                    <span class="h4 text-success mb-0">${{ number_format($order->total, 2) }}</span>
+                                    <span class="h4 text-success mb-0">${{ number_format($order->total_amount, 2) }}</span>
                                 </div>
                             </div>
                         </div>

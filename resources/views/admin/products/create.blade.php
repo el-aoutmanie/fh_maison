@@ -106,6 +106,19 @@
                     @enderror
                 </div>
 
+                <!-- Shipping Price -->
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">{{ __('Shipping Price') }}</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" step="0.01" min="0" name="shipping_price" class="form-control @error('shipping_price') is-invalid @enderror" value="{{ old('shipping_price', '0') }}" placeholder="0.00">
+                    </div>
+                    <small class="text-muted">{{ __('Set to 0 for free shipping') }}</small>
+                    @error('shipping_price')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <!-- Description EN -->
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">{{ __('Description (English)') }}</label>
