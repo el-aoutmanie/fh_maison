@@ -23,6 +23,11 @@ Route::get('/', function () {
     return redirect(LaravelLocalization::getLocalizedURL(app()->getLocale()));
 });
 
+// External API for order status updates (no locale, no auth)
+Route::post('/api/orders/{code}/status', [CheckoutController::class, 'updateOrderStatusExternal'])
+    ->name('api.orders.update-status')
+    ->middleware('throttle:60,1');
+
 // Localized routes
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
@@ -63,6 +68,10 @@ Route::group([
     // Contact
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+    
+    // Track Order (public - no auth required)
+    Route::get('/track-order', [CheckoutController::class, 'trackOrderPage'])->name('track-order');
+    Route::post('/track-order', [CheckoutController::class, 'trackOrder'])->name('track-order.search');
     
     // About
     Route::get('/about', function () { 

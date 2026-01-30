@@ -341,5 +341,108 @@ class CheckoutController extends Controller
         return redirect()->route('cart.index')
             ->with('warning', __('Payment was cancelled. Your order has been cancelled.'));
     }
-}
 
+    /**
+     * Display track order page
+     */
+    public function trackOrderPage()
+    {
+        return view('frontend.track-order.index');
+    }
+
+    /**
+     * Search and display order by code
+     */
+    public function trackOrder(Request $request)
+    {
+        $request->validate([
+            'order_code' => 'required|string|max:50'
+        ]);
+
+        $orderCode = strtoupper(trim($request->order_code));
+        
+        $order = Order::with(['items.variant.product.images', 'customer'])
+            ->where('code', $orderCode)
+            ->first();
+
+        if (!$order) {
+            return back()
+                ->withInput()
+                ->with('error', __('Order not found. Please check your order code and try again.'));
+        }
+
+        return view('frontend.track-order.index', compact('order'));
+    }
+
+    /**
+     * External API to update order status (for external systems/webhooks)
+     * 
+     * Usage: POST /api/orders/{code}/status
+     * Body: { "status": "shipped", "api_key": "your-secret-key", "tracking_number": "optional" }
+     */
+    public function updateOrderStatusExternal(Request $request, string $code)
+    {
+        // Validate API key (you should set this in .env as ORDER_API_KEY)
+        $apiKey = $request->header('X-API-Key') ?? $request->input('api_key');
+        $expectedKey = config('app.order_api_key', env('ORDER_API_KEY', 'fhmaison-order-api-2026'));
+        
+        if (!$apiKey || $apiKey !== $expectedKey) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized. Invalid or missing API key.'
+            ], 401);
+        }
+
+        $request->validate([
+            'status' => 'required|string|in:pending,processing,shipped,delivered,cancelled',
+            'tracking_number' => 'nullable|string|max:100',
+            'tracking_url' => 'nullable|url|max:500',
+            'notes' => 'nullable|string|max:1000'
+        ]);
+
+        $order = Order::where('code', strtoupper($code))->first();
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order not found.'
+            ], 404);
+        }
+
+        $updateData = [
+            'status' => $request->status
+        ];
+
+        // Update tracking info if provided
+        if ($request->has('tracking_number')) {
+            $updateData['tracking_number'] = $request->tracking_number;
+        }
+        if ($request->has('tracking_url')) {
+            $updateData['tracking_url'] = $request->tracking_url;
+        }
+
+        // Set delivered timestamp
+        if ($request->status === 'delivered') {
+            $updateData['delivered_at'] = now();
+        }
+
+        // Set shipped timestamp
+        if ($request->status === 'shipped' && !$order->shipped_at) {
+            $updateData['shipped_at'] = now();
+        }
+
+        $order->update($updateData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order status updated successfully.',
+            'order' => [
+                'code' => $order->code,
+                'status' => $order->status,
+                'tracking_number' => $order->tracking_number,
+                'tracking_url' => $order->tracking_url,
+                'updated_at' => $order->updated_at->toIso8601String()
+            ]
+        ]);
+    }
+}

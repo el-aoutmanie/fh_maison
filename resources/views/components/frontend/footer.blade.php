@@ -76,6 +76,11 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ LaravelLocalization::localizeUrl(route('track-order')) }}" class="text-stone text-decoration-none hover-clay">
+                            <i class="fas fa-search-location me-1"></i> {{ __('Track Order') }}
+                        </a>
+                    </li>
+                    <li>
                         <a href="#" class="text-stone text-decoration-none hover-clay">
                             {{ __('Shipping Information') }}
                         </a>

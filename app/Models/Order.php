@@ -13,11 +13,13 @@ class Order extends Model
         'code', 'status', 'coupon_id', 'customer_id',
         'paid_at', 'total_amount', 'subtotal', 'discount_amount', 'discount_percentage', 'shipping_amount',
         'shipping_name', 'shipping_address', 'shipping_city', 'shipping_state', 'shipping_zip', 'shipping_country', 'shipping_phone',
-        'payment_method', 'payment_status', 'tracking_number', 'notes'
+        'payment_method', 'payment_status', 'tracking_number', 'tracking_url', 'shipped_at', 'delivered_at', 'notes'
     ];
 
     protected $casts = [
         'paid_at' => 'datetime',
+        'shipped_at' => 'datetime',
+        'delivered_at' => 'datetime',
         'total_amount' => 'decimal:2',
         'subtotal' => 'decimal:2',
         'discount_amount' => 'decimal:2',

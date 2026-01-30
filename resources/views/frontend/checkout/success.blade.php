@@ -288,12 +288,10 @@
                             <span>{{ __('Continue Shopping') }}</span>
                         </a>
                         
-                        @auth
-                        <a href="{{ route('orders.index') }}" class="btn btn-terracotta w-100 rounded-pill py-3 d-flex align-items-center justify-content-center gap-2 {{ $isRtl ? 'flex-row-reverse' : '' }}">
-                            <i class="fas fa-list-ul"></i>
-                            <span>{{ __('View All Orders') }}</span>
+                        <a href="{{ route('track-order') }}" class="btn btn-terracotta w-100 rounded-pill py-3 d-flex align-items-center justify-content-center gap-2 {{ $isRtl ? 'flex-row-reverse' : '' }}">
+                            <i class="fas fa-search-location"></i>
+                            <span>{{ __('Track Your Order') }}</span>
                         </a>
-                        @endauth
                     </div>
                 </div>
                 
