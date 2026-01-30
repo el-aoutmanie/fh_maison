@@ -21,7 +21,7 @@
             <div class="col-lg-8">
                 <!-- Contact Information -->
                 <div class="card border-sand rounded-4 shadow-sm overflow-hidden mb-4" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-                    <div class="card-header text-white p-4 bg-gradient" style="background: linear-gradient(135deg, var(--bs-clay), var(--bs-terracotta));">
+                    <div class="card-header text-white p-4 bg-gradient-terracotta">
                         <h3 class="fs-5 fw-semibold mb-0 d-flex align-items-center {{ $isRtl ? 'flex-row-reverse' : '' }}">
                             <i class="fas fa-user-circle {{ $isRtl ? 'ms-2' : 'me-2' }}"></i>
                             {{ __('Contact Information') }}
@@ -75,7 +75,7 @@
 
                 <!-- Shipping Address -->
                 <div class="card border-sand rounded-4 shadow-sm overflow-hidden mb-4" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-                    <div class="card-header text-white p-4 bg-gradient" style="background: linear-gradient(135deg, var(--bs-clay), var(--bs-terracotta));">
+                    <div class="card-header text-white p-4 bg-gradient-terracotta">
                         <h3 class="fs-5 fw-semibold mb-0 d-flex align-items-center {{ $isRtl ? 'flex-row-reverse' : '' }}">
                             <i class="fas fa-map-marker-alt {{ $isRtl ? 'ms-2' : 'me-2' }}"></i>
                             {{ __('Shipping Address') }}
@@ -139,7 +139,7 @@
 
                 <!-- Payment Method -->
                 <div class="card border-sand rounded-4 shadow-sm overflow-hidden mb-4" x-data="{ paymentMethod: 'cod' }" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-                    <div class="card-header text-white p-4 bg-gradient" style="background: linear-gradient(135deg, var(--bs-clay), var(--bs-terracotta));">
+                    <div class="card-header text-white p-4 bg-gradient-terracotta">
                         <h3 class="fs-5 fw-semibold mb-0 d-flex align-items-center {{ $isRtl ? 'flex-row-reverse' : '' }}">
                             <i class="fas fa-credit-card {{ $isRtl ? 'ms-2' : 'me-2' }}"></i>
                             {{ __('Payment Method') }}
@@ -229,7 +229,7 @@
             <!-- Order Summary -->
             <div class="col-lg-4">
                 <div class="card border-sand rounded-4 shadow-sm overflow-hidden sticky-top" style="top: 100px;" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
-                    <div class="card-header text-white p-4 bg-gradient" style="background: linear-gradient(135deg, var(--bs-clay), var(--bs-terracotta));">
+                    <div class="card-header text-white p-4 bg-gradient-terracotta">
                         <h3 class="fs-5 fw-semibold mb-0">{{ __('Order Summary') }}</h3>
                     </div>
                     
@@ -412,7 +412,7 @@ label.d-flex:hover {
 }
 
 .hover-border-clay:hover {
-    border-color: var(--bs-clay) !important;
+    border-color: #D4A574 !important;
 }
 
 [x-cloak] {
